@@ -1,0 +1,391 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MoneFlo - Sistem Keuangan Organisasi</title>
+    
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- FontAwesome & Google Fonts -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800;900&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+    
+    <!-- Konfigurasi Tailwind Custom -->
+    <script>
+        tailwind.config={theme:{extend:{colors:{primary:{DEFAULT:'#083D56',light:'#0C5272',dark:'#052B3D','50':'#E8F0F4'},secondary:{DEFAULT:'#546E7A',light:'#78909C',dark:'#37474F','50':'#ECEFF1'},tertiary:{DEFAULT:'#00695C',light:'#00897B',dark:'#004D40','50':'#E0F2F1'},neutral:{DEFAULT:'#767779',light:'#9E9E9E',dark:'#424242','50':'#F5F5F5'}},fontFamily:{sans:['Plus Jakarta Sans','sans-serif'],display:['Space Grotesk','sans-serif']}}}}
+    </script>
+
+    <!-- Link ke File CSS Eksternal -->
+    <link rel="stylesheet" href="style.css">
+</head>
+<body class="bg-neutral-50 text-neutral-dark">
+
+    <!-- LOGIN -->
+    <div id="auth-login" class="auth-bg flex items-center justify-center p-4">
+        <div class="w-full max-w-md relative z-10">
+            <div class="text-center mb-8">
+                <!-- Logo MoneFlo (JPEG) -->
+                <div class="inline-flex w-14 h-14 rounded-lg flex items-center justify-center flex-shrink-0 overflow-hidden">
+                    <img src="logoproject.jpeg" alt="Logo MoneFlo" class="w-full h-full object-contain">
+                </div>
+                <h1 class="text-3xl font-display font-bold text-white">MoneFlo</h1>
+                <p class="text-white/60 mt-1 text-sm">Sistem Keuangan Organisasi</p>
+            </div>
+            <div class="bg-white rounded-2xl shadow-2xl p-8">
+                <h2 class="text-xl font-bold text-primary mb-1">Masuk Akun Organisasi</h2><p class="text-sm text-neutral mb-6">Kelola keuangan organisasi Anda dengan mudah.</p>
+                <div class="space-y-4">
+                    <div><label class="block text-sm font-medium text-neutral-dark mb-1.5">Email Organisasi</label><input id="login-email" type="email" placeholder="nama@organisasi.com" class="input-styled w-full px-4 py-3 border border-neutral-light rounded-xl text-sm outline-none transition-all"></div>
+                    <div><label class="block text-sm font-medium text-neutral-dark mb-1.5">Kata Sandi</label><div class="relative"><input id="login-pass" type="password" placeholder="Masukkan kata sandi" class="input-styled w-full px-4 py-3 border border-neutral-light rounded-xl text-sm outline-none transition-all pr-10"><button type="button" onclick="togglePass('login-pass',this)" class="absolute right-3 top-1/2 -translate-y-1/2 text-neutral-light hover:text-neutral"><i class="fas fa-eye text-sm"></i></button></div></div>
+                    <div class="flex items-center justify-between"><label class="flex items-center gap-2 text-sm text-neutral cursor-pointer"><input type="checkbox" class="accent-tertiary w-4 h-4 rounded">Ingat saya</label><a href="#" onclick="showPage('forgot');return false" class="text-sm text-tertiary hover:text-tertiary-dark font-medium">Lupa sandi?</a></div>
+                    <button type="button" onclick="handleLogin()" class="w-full py-3 bg-primary text-white rounded-xl font-semibold hover:bg-primary-light transition-colors">Masuk</button>
+                </div>
+                <div class="mt-6 text-center"><p class="text-sm text-neutral mb-3">Belum mendaftarkan organisasi?</p><button type="button" onclick="showPage('register')" class="inline-flex items-center gap-2 px-6 py-3 bg-tertiary text-white rounded-xl font-semibold hover:bg-tertiary-light transition-colors text-sm"><i class="fas fa-plus-circle text-xs"></i> Daftar Organisasi</button></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- LUPA SANDI -->
+    <div id="auth-forgot" class="auth-bg flex items-center justify-center p-4 hidden">
+        <div class="w-full max-w-md relative z-10">
+            <div class="text-center mb-8">
+                <!-- Logo MoneFlo (JPEG) -->
+                <div class="inline-flex w-14 h-14 rounded-lg flex items-center justify-center flex-shrink-0 overflow-hidden">
+                    <img src="logoproject.jpeg" alt="Logo MoneFlo" class="w-full h-full object-contain">
+                </div>
+                <h1 class="text-3xl font-display font-bold text-white">MoneFlo</h1>
+                <p class="text-white/60 mt-1 text-sm">Pemulihan Kata Sandi</p>
+            </div>
+            <div class="bg-white rounded-2xl shadow-2xl p-8">
+                <div id="forgot-step-1"><h2 class="text-xl font-bold text-primary mb-1">Lupa Kata Sandi?</h2><p class="text-sm text-neutral mb-6">Masukkan email organisasi yang terdaftar.</p><div class="space-y-4"><div><label class="block text-sm font-medium text-neutral-dark mb-1.5">Email Terdaftar</label><input id="forgot-email" type="email" placeholder="nama@organisasi.com" class="input-styled w-full px-4 py-3 border border-neutral-light rounded-xl text-sm outline-none transition-all"></div><button type="button" onclick="handleForgotStep1()" class="w-full py-3 bg-primary text-white rounded-xl font-semibold hover:bg-primary-light transition-colors">Kirim Kode Verifikasi</button></div></div>
+                <div id="forgot-step-2" class="hidden"><h2 class="text-xl font-bold text-primary mb-1">Masukkan Kode Verifikasi</h2><p class="text-sm text-neutral mb-1">Kode dikirim ke <strong id="forgot-email-display" class="text-primary"></strong></p><p class="text-xs text-neutral mb-6">Kode berlaku 5 menit. <button type="button" onclick="handleResendCode()" class="text-tertiary font-semibold hover:text-tertiary-dark">Kirim ulang</button></p><div class="space-y-4"><div><label class="block text-sm font-medium text-neutral-dark mb-1.5">Kode 6 Digit</label><div class="flex gap-2 justify-center" id="otp-inputs"></div></div><button type="button" onclick="handleForgotStep2()" class="w-full py-3 bg-primary text-white rounded-xl font-semibold hover:bg-primary-light transition-colors">Verifikasi Kode</button></div></div>
+                <div id="forgot-step-3" class="hidden"><h2 class="text-xl font-bold text-primary mb-1">Buat Kata Sandi Baru</h2><p class="text-sm text-neutral mb-6">Masukkan kata sandi baru yang kuat.</p><div class="space-y-4"><div><label class="block text-sm font-medium text-neutral-dark mb-1.5">Kata Sandi Baru</label><div class="relative"><input id="forgot-new-pass" type="password" placeholder="Minimal 8 karakter" class="input-styled w-full px-4 py-3 border border-neutral-light rounded-xl text-sm outline-none transition-all pr-10"><button type="button" onclick="togglePass('forgot-new-pass',this)" class="absolute right-3 top-1/2 -translate-y-1/2 text-neutral-light hover:text-neutral"><i class="fas fa-eye text-sm"></i></button></div><div id="pass-strength" class="mt-2 flex gap-1 items-center"></div></div><div><label class="block text-sm font-medium text-neutral-dark mb-1.5">Konfirmasi</label><div class="relative"><input id="forgot-confirm-pass" type="password" placeholder="Ulangi kata sandi baru" class="input-styled w-full px-4 py-3 border border-neutral-light rounded-xl text-sm outline-none transition-all pr-10"><button type="button" onclick="togglePass('forgot-confirm-pass',this)" class="absolute right-3 top-1/2 -translate-y-1/2 text-neutral-light hover:text-neutral"><i class="fas fa-eye text-sm"></i></button></div><div id="forgot-pass-match" class="hidden text-xs px-3 py-2 rounded-lg"></div></div><button type="button" onclick="handleForgotStep3()" class="w-full py-3 bg-tertiary text-white rounded-xl font-semibold hover:bg-tertiary-light transition-colors">Simpan Kata Sandi Baru</button></div></div>
+                <div id="forgot-success" class="hidden text-center py-4"><div class="w-16 h-16 rounded-full bg-tertiary-50 flex items-center justify-center mx-auto mb-4"><i class="fas fa-check-circle text-tertiary text-3xl"></i></div><h2 class="text-xl font-bold text-primary mb-2">Berhasil!</h2><p class="text-sm text-neutral mb-6">Kata sandi berhasil diubah.</p><button type="button" onclick="showPage('login')" class="inline-flex items-center gap-2 px-6 py-3 bg-primary text-white rounded-xl font-semibold hover:bg-primary-light transition-colors text-sm"><i class="fas fa-sign-in-alt text-xs"></i> Masuk Sekarang</button></div>
+                <div class="mt-6 text-center"><button type="button" onclick="showPage('login')" class="text-sm text-neutral hover:text-neutral-dark font-medium flex items-center gap-2 mx-auto"><i class="fas fa-arrow-left text-xs"></i> Kembali ke Masuk</button></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- REGISTER (ORGANISASI ONLY) -->
+    <div id="auth-register" class="auth-bg flex items-center justify-center p-4 hidden">
+        <div class="w-full max-w-md relative z-10">
+            <div class="text-center mb-8">
+                <!-- Logo MoneFlo (JPEG) -->
+                <div class="inline-flex w-14 h-14 rounded-lg flex items-center justify-center flex-shrink-0 overflow-hidden">
+                    <img src="logoproject.jpeg" alt="Logo MoneFlo" class="w-full h-full object-contain">
+                </div>
+                <h1 class="text-3xl font-display font-bold text-white">MoneFlo</h1>
+                <p class="text-white/60 mt-1 text-sm">Daftarkan Organisasi Anda</p>
+            </div>
+            <div class="bg-white rounded-2xl shadow-2xl p-8">
+                <h2 class="text-xl font-bold text-primary mb-1">Buat Akun Organisasi</h2><p class="text-sm text-neutral mb-6">Lengkapi data identitas organisasi di bawah ini.</p>
+                <div id="form-org" class="space-y-4">
+                    <div><label class="block text-sm font-medium text-neutral-dark mb-1.5">Nama Organisasi <span class="text-red-400">*</span></label><input id="reg-name" type="text" placeholder="Contoh: BEM Fakultas Teknik" class="input-styled w-full px-4 py-3 border border-neutral-light rounded-xl text-sm outline-none transition-all"></div>
+                    <div><label class="block text-sm font-medium text-neutral-dark mb-1.5">Jenis Organisasi <span class="text-red-400">*</span></label><select id="reg-type" class="input-styled w-full px-4 py-3 border border-neutral-light rounded-xl text-sm outline-none transition-all text-neutral"><option value="">Pilih jenis</option><option>Kemahasiswaan</option><option>Yayasan</option><option>Komunitas</option><option>UKM</option></select></div>
+                    <div><label class="block text-sm font-medium text-neutral-dark mb-1.5">Email Resmi <span class="text-red-400">*</span></label><input id="reg-email" type="email" placeholder="humas@organisasi.com" class="input-styled w-full px-4 py-3 border border-neutral-light rounded-xl text-sm outline-none transition-all"></div>
+                    <div><label class="block text-sm font-medium text-neutral-dark mb-1.5">No. Telepon / WhatsApp <span class="text-red-400">*</span></label><input id="reg-phone" type="tel" placeholder="08xxxxxxxxxx" class="input-styled w-full px-4 py-3 border border-neutral-light rounded-xl text-sm outline-none transition-all"></div>
+                    <div><label class="block text-sm font-medium text-neutral-dark mb-1.5">Deskripsi Singkat</label><textarea id="reg-desc" rows="3" placeholder="Ceritakan sedikit tentang organisasi..." class="input-styled w-full px-4 py-3 border border-neutral-light rounded-xl text-sm outline-none transition-all resize-none"></textarea></div>
+                    <div><label class="block text-sm font-medium text-neutral-dark mb-1.5">Kata Sandi <span class="text-red-400">*</span></label><div class="relative"><input id="reg-pass" type="password" placeholder="Minimal 8 karakter" class="input-styled w-full px-4 py-3 border border-neutral-light rounded-xl text-sm outline-none transition-all pr-10"><button type="button" onclick="togglePass(this.previousElementSibling,this)" class="absolute right-3 top-1/2 -translate-y-1/2 text-neutral-light hover:text-neutral"><i class="fas fa-eye text-sm"></i></button></div></div>
+                    <div><label class="block text-sm font-medium text-neutral-dark mb-1.5">Konfirmasi Kata Sandi <span class="text-red-400">*</span></label><input id="reg-pass-confirm" type="password" placeholder="Ulangi kata sandi" class="input-styled w-full px-4 py-3 border border-neutral-light rounded-xl text-sm outline-none transition-all"></div>
+                    <button type="button" onclick="handleRegister()" class="w-full py-3 bg-tertiary text-white rounded-xl font-semibold hover:bg-tertiary-light transition-colors mt-2">Daftarkan Sekarang</button>
+                </div>
+                <div class="mt-6 text-center"><p class="text-sm text-neutral mb-3">Sudah punya akun?</p><button type="button" onclick="showPage('login')" class="inline-flex items-center gap-2 px-6 py-3 bg-primary text-white rounded-xl font-semibold hover:bg-primary-light transition-colors text-sm"><i class="fas fa-sign-in-alt text-xs"></i> Masuk di Sini</button></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- APP SHELL -->
+    <div id="app" class="hidden">
+        <div id="sidebar-overlay" class="sidebar-overlay fixed inset-0 bg-black/40 z-[45] hidden lg:hidden" onclick="toggleSidebar()"></div>
+        <aside id="sidebar" class="sidebar bg-primary">
+            <!-- Logo MoneFlo (JPEG) in Sidebar -->
+            <div class="px-6 py-5 border-b border-white/10 flex-shrink-0">
+                <div class="flex items-center gap-3">
+                    <div class="w-9 h-9 rounded-lg flex items-center justify-center flex-shrink-0 overflow-hidden">
+                         <img src="logoproject2.png" alt="MoneFlo Logo" class="w-full h-full object-contain">
+                    </div>
+                    <div>
+                        <h1 class="font-display font-bold text-white text-lg leading-tight">MoneFlo</h1>
+                        <p class="text-white/40 text-[10px] tracking-wider uppercase">Keuangan Organisasi</p>
+                    </div>
+                </div>
+            </div>
+            <nav class="flex-1 py-4 px-3 space-y-1 overflow-y-auto">
+                <button type="button" onclick="navigateTo('beranda')" class="nav-item active w-full flex items-center gap-3 px-4 py-2.5 rounded-lg text-sm text-white/70" data-page="beranda"><i class="fas fa-home w-5 text-center"></i><span>Beranda</span></button>
+                <button type="button" onclick="navigateTo('transaksi')" class="nav-item w-full flex items-center gap-3 px-4 py-2.5 rounded-lg text-sm text-white/70" data-page="transaksi"><i class="fas fa-exchange-alt w-5 text-center"></i><span>Transaksi</span></button>
+                <button type="button" onclick="navigateTo('laporan')" class="nav-item w-full flex items-center gap-3 px-4 py-2.5 rounded-lg text-sm text-white/70" data-page="laporan"><i class="fas fa-chart-pie w-5 text-center"></i><span>Laporan</span></button>
+                <button type="button" onclick="navigateTo('anggota')" class="nav-item w-full flex items-center gap-3 px-4 py-2.5 rounded-lg text-sm text-white/70" data-page="anggota"><i class="fas fa-users w-5 text-center"></i><span>Anggota</span></button>
+                <button type="button" onclick="navigateTo('pengaturan')" class="nav-item w-full flex items-center gap-3 px-4 py-2.5 rounded-lg text-sm text-white/70" data-page="pengaturan"><i class="fas fa-cog w-5 text-center"></i><span>Pengaturan</span></button>
+            </nav>
+            <div class="px-4 pb-3 flex-shrink-0"><button type="button" onclick="openModal('modal-tambah')" class="btn-pulse w-full flex items-center justify-center gap-2 py-3 bg-tertiary text-white rounded-xl text-sm font-semibold hover:bg-tertiary-light transition-colors"><i class="fas fa-plus"></i> Tambah Transaksi</button></div>
+            <div class="px-4 pb-5 flex-shrink-0"><div class="org-card-clickable bg-white/10 rounded-xl p-3.5" onclick="openOrgPanel()"><div class="flex items-center gap-3"><div id="sidebar-org-logo" class="w-10 h-10 rounded-lg bg-tertiary/40 flex items-center justify-center text-white font-bold text-sm flex-shrink-0">BF</div><div class="min-w-0 flex-1"><p id="sidebar-org-name" class="text-white text-sm font-semibold truncate">BEM Fakultas Furap</p><p class="text-white/40 text-[11px]">Akun Organisasi</p></div><i class="fas fa-chevron-up text-white/30 text-[10px] flex-shrink-0"></i></div></div></div>
+        </aside>
+        <div class="main-scroll">
+            <header class="sticky top-0 z-30 bg-white/80 backdrop-blur-lg border-b border-neutral-light/50 flex-shrink-0 no-print">
+                <div class="flex items-center justify-between px-4 lg:px-8 py-3">
+                    <div class="flex items-center gap-3"><button type="button" onclick="toggleSidebar()" class="lg:hidden w-9 h-9 rounded-lg bg-neutral-50 flex items-center justify-center text-neutral-dark hover:bg-neutral-100 transition-colors"><i class="fas fa-bars text-sm"></i></button><h2 id="page-title" class="font-semibold text-primary text-lg">Beranda</h2></div>
+                    <div class="flex items-center gap-2">
+                        <div class="relative"><button type="button" onclick="openModal('modal-notif')" class="w-9 h-9 rounded-lg bg-neutral-50 flex items-center justify-center text-neutral-dark hover:bg-neutral-100 transition-colors relative"><i class="fas fa-bell text-sm"></i><span id="notif-badge" class="notif-badge absolute -top-1 -right-1 w-4 h-4 bg-red-500 text-white text-[10px] font-bold rounded-full flex items-center justify-center">2</span></button></div>
+                        <button type="button" onclick="navigateTo('profil')" class="flex items-center gap-2.5 pl-2 pr-3 py-1.5 rounded-xl hover:bg-neutral-50 transition-colors"><div id="topbar-avatar" class="profile-photo-sm bg-primary flex items-center justify-center text-white text-xs font-bold"><span>BF</span></div><span id="topbar-name" class="text-sm font-medium text-neutral-dark hidden sm:block">BEM Fakultas Furap</span><i class="fas fa-chevron-down text-[10px] text-neutral"></i></button>
+                    </div>
+                </div>
+            </header>
+            <div class="content-scroll">
+                <main class="p-4 lg:p-8">
+
+                    <!-- PROFIL ORGANISASI -->
+                    <div id="page-profil" class="page-enter space-y-6 hidden">
+                        <div class="bg-white rounded-2xl border border-neutral-light/30 overflow-hidden">
+                            <div class="h-28 bg-gradient-to-r from-primary via-primary-light to-tertiary relative">
+                                <button type="button" onclick="toggleProfileEdit()" id="btn-edit-profil" class="absolute top-4 right-4 px-4 py-2 bg-white/20 backdrop-blur text-white rounded-lg text-sm font-medium hover:bg-white/30 transition-colors flex items-center gap-2"><i class="fas fa-pen text-xs"></i> Edit Profil</button>
+                            </div>
+                            <div class="px-6 pb-6 -mt-12 relative">
+                                <div class="flex flex-col sm:flex-row items-start gap-5">
+                                    <div class="profile-photo-wrap bg-primary-light flex items-center justify-center text-white text-3xl font-bold flex-shrink-0 ring-4 ring-white shadow-lg" onclick="document.getElementById('profile-photo-input').click()">
+                                        <img id="profile-photo-img" src="" alt="" class="hidden">
+                                        <span id="profile-photo-initial">BF</span>
+                                        <div class="profile-photo-overlay"><i class="fas fa-camera text-white text-lg mb-1"></i><span class="text-white text-[10px] font-medium">Ubah Logo</span></div>
+                                        <input type="file" id="profile-photo-input" accept="image/jpeg,image/png,image/jpg" class="hidden" onchange="handleProfilePhoto(this)">
+                                    </div>
+                                    <div class="pt-2 sm:pt-14 flex-1 w-full">
+                                        <h3 id="profile-display-name" class="text-xl font-bold text-primary-dark">BEM Fakultas Furap</h3>
+                                        <p class="text-sm text-neutral mt-0.5" id="profile-display-type">Kemahasiswaan</p>
+                                        <div class="flex flex-wrap gap-3 mt-3">
+                                            <span id="badge-email" class="inline-flex items-center gap-1.5 text-xs text-neutral bg-neutral-50 px-3 py-1.5 rounded-lg"><i class="fas fa-envelope text-tertiary"></i> <span id="profile-email-text">bem.furap@univ.ac.id</span></span>
+                                            <span id="badge-phone" class="inline-flex items-center gap-1.5 text-xs text-neutral bg-neutral-50 px-3 py-1.5 rounded-lg"><i class="fas fa-phone text-tertiary"></i> <span id="profile-phone-text">0812-3456-7890</span></span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="px-6 pb-6 border-t border-neutral-light/50 pt-4">
+                                <h4 class="text-xs font-semibold text-neutral uppercase tracking-wider mb-2">Tentang Kami</h4>
+                                <p id="profile-desc-text" class="text-sm text-neutral-dark leading-relaxed">BEM Fakultas Furap merupakan badan eksekutif mahasiswa yang bergerak dalam bidang pelayanan, advokasi, dan pengembangan kreativitas mahasiswa.</p>
+                            </div>
+                        </div>
+                        <div id="profile-edit-section" class="hidden"><div class="card-hover bg-white rounded-2xl p-6 border border-neutral-light/30"><h3 class="font-semibold text-primary mb-5 flex items-center gap-2"><i class="fas fa-edit text-tertiary"></i> Edit Data Organisasi</h3><div class="space-y-4"><div class="grid grid-cols-1 sm:grid-cols-2 gap-4"><div><label class="block text-xs font-semibold text-neutral uppercase tracking-wider mb-1.5">Nama Organisasi</label><input id="edit-name" type="text" class="input-styled w-full px-4 py-2.5 border border-neutral-light rounded-xl text-sm outline-none transition-all"></div><div><label class="block text-xs font-semibold text-neutral uppercase tracking-wider mb-1.5">Jenis</label><select id="edit-type" class="input-styled w-full px-4 py-2.5 border border-neutral-light rounded-xl text-sm outline-none transition-all text-neutral"><option value="Kemahasiswaan">Kemahasiswaan</option><option value="Yayasan">Yayasan</option><option value="Komunitas">Komunitas</option><option value="UKM">UKM</option></select></div><div><label class="block text-xs font-semibold text-neutral uppercase tracking-wider mb-1.5">Email</label><input id="edit-email" type="email" class="input-styled w-full px-4 py-2.5 border border-neutral-light rounded-xl text-sm outline-none transition-all"></div><div><label class="block text-xs font-semibold text-neutral uppercase tracking-wider mb-1.5">No. Telepon</label><input id="edit-phone" type="tel" class="input-styled w-full px-4 py-2.5 border border-neutral-light rounded-xl text-sm outline-none transition-all"></div></div><div><label class="block text-xs font-semibold text-neutral uppercase tracking-wider mb-1.5">Deskripsi</label><textarea id="edit-desc" rows="3" class="input-styled w-full px-4 py-2.5 border border-neutral-light rounded-xl text-sm outline-none transition-all resize-none"></textarea></div><div class="flex gap-3 pt-2"><button type="button" onclick="saveProfileEdit()" class="px-6 py-2.5 bg-tertiary text-white rounded-xl text-sm font-semibold hover:bg-tertiary-light transition-colors">Simpan Perubahan</button><button type="button" onclick="toggleProfileEdit()" class="px-6 py-2.5 border border-neutral-light rounded-xl text-sm font-semibold text-neutral-dark hover:bg-neutral-50 transition-colors">Batal</button></div></div></div></div>
+                        <div class="card-hover bg-white rounded-2xl p-6 border border-neutral-light/30"><h3 class="font-semibold text-primary mb-5 flex items-center gap-2"><i class="fas fa-shield-alt text-tertiary"></i> Keamanan Akun</h3><div class="flex items-center gap-4 p-4 bg-primary-50 rounded-xl border border-primary/10"><div class="flex-1 min-w-0"><p class="font-semibold text-primary-dark">Keluar dari Sistem</p><p class="text-sm text-neutral">Anda akan keluar dari akun organisasi ini.</p></div><button type="button" onclick="handleLogout()" class="px-4 py-2 text-sm text-red-500 border border-red-200 rounded-lg hover:bg-red-50 transition-colors flex-shrink-0 font-medium">Keluar</button></div></div>
+                    </div>
+
+                    <!-- BERANDA -->
+                    <div id="page-beranda" class="page-enter space-y-6 hidden">
+                        <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                            <div class="card-hover bg-white rounded-2xl p-5 border border-neutral-light/30"><div class="flex items-center justify-between mb-3"><span class="text-xs font-semibold text-neutral uppercase tracking-wider">Saldo Kas Organisasi</span><div class="w-9 h-9 rounded-lg bg-primary/10 flex items-center justify-center"><i class="fas fa-wallet text-primary text-sm"></i></div></div><p class="font-display font-bold text-2xl text-primary-dark stat-number" id="home-saldo">Rp0</p><p class="text-xs text-tertiary mt-1" id="home-saldo-pct"></p></div>
+                            <div class="card-hover bg-white rounded-2xl p-5 border border-neutral-light/30"><div class="flex items-center justify-between mb-3"><span class="text-xs font-semibold text-neutral uppercase tracking-wider">Pemasukan</span><div class="w-9 h-9 rounded-lg bg-tertiary/10 flex items-center justify-center"><i class="fas fa-arrow-circle-down text-tertiary text-sm"></i></div></div><p class="font-display font-bold text-2xl text-tertiary stat-number" id="home-masuk">Rp0</p><p class="text-xs text-tertiary mt-1" id="home-masuk-pct"></p></div>
+                            <div class="card-hover bg-white rounded-2xl p-5 border border-neutral-light/30"><div class="flex items-center justify-between mb-3"><span class="text-xs font-semibold text-neutral uppercase tracking-wider">Pengeluaran</span><div class="w-9 h-9 rounded-lg bg-red-50 flex items-center justify-center"><i class="fas fa-arrow-circle-up text-red-400 text-sm"></i></div></div><p class="font-display font-bold text-2xl text-red-500 stat-number" id="home-keluar">Rp0</p><p class="text-xs text-red-500 mt-1" id="home-keluar-pct"></p></div>
+                        </div>
+                        <div class="grid grid-cols-1 lg:grid-cols-3 gap-4">
+                            <div class="lg:col-span-2 card-hover bg-white rounded-2xl p-5 border border-neutral-light/30"><h3 class="font-semibold text-primary mb-4 text-sm">Pemasukan & Pengeluaran 6 Bulan Terakhir</h3><div class="h-64"><canvas id="chart-beranda"></canvas></div></div>
+                            <div class="card-hover bg-white rounded-2xl p-5 border border-neutral-light/30"><div class="flex items-center justify-between mb-4"><h3 class="font-semibold text-primary text-sm">Realisasi Anggaran</h3><button type="button" onclick="openEditAllPrograms()" class="text-[11px] text-tertiary font-semibold hover:text-tertiary-dark flex items-center gap-1"><i class="fas fa-pen text-[9px]"></i> Revisi</button></div><div class="space-y-3" id="progress-bars"></div></div>
+                        </div>
+                        <div class="grid grid-cols-1 lg:grid-cols-3 gap-4">
+                            <div class="lg:col-span-2 card-hover bg-white rounded-2xl p-5 border border-neutral-light/30"><div class="flex items-center justify-between mb-4"><h3 class="font-semibold text-primary text-sm">Transaksi Terakhir</h3><a href="#" onclick="navigateTo('transaksi');return false" class="text-xs text-tertiary font-semibold hover:text-tertiary-dark">Lihat Semua</a></div><div class="space-y-3" id="recent-transactions"></div></div>
+                            <div class="card-hover bg-white rounded-2xl p-5 border border-neutral-light/30"><div class="flex items-center justify-between mb-4"><h3 class="font-semibold text-primary text-sm">Agenda Pembayaran</h3><button type="button" onclick="openAgendaModal()" class="w-7 h-7 rounded-lg bg-tertiary/10 flex items-center justify-center text-tertiary hover:bg-tertiary/20 transition-colors" title="Tambah agenda"><i class="fas fa-plus text-xs"></i></button></div><div class="space-y-2" id="agenda-list"></div></div>
+                        </div>
+                        <div class="bg-amber-50 border border-amber-200 rounded-2xl p-4 flex items-start gap-3 no-print"><div class="w-9 h-9 rounded-lg bg-amber-100 flex items-center justify-center flex-shrink-0 mt-0.5"><i class="fas fa-exclamation-triangle text-amber-600 text-sm"></i></div><div><p class="text-sm font-semibold text-amber-800">Perhatian</p><p class="text-xs text-amber-700 mt-0.5">Terdapat 3 transaksi dengan status "Diproses" yang memerlukan persetujuan.</p></div></div>
+                    </div>
+
+                    <!-- TRANSAKSI -->
+                    <div id="page-transaksi" class="page-enter space-y-6 hidden">
+                        <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                            <div class="card-hover bg-white rounded-2xl p-5 border border-neutral-light/30"><div class="flex items-center justify-between mb-3"><span class="text-xs font-semibold text-neutral uppercase tracking-wider">Saldo Saat Ini</span><div class="w-9 h-9 rounded-lg bg-primary/10 flex items-center justify-center"><i class="fas fa-wallet text-primary text-sm"></i></div></div><p class="font-display font-bold text-2xl text-primary-dark stat-number" id="txn-saldo">Rp0</p><p class="text-xs text-tertiary mt-1" id="txn-saldo-pct"></p></div>
+                            <div class="card-hover bg-white rounded-2xl p-5 border border-neutral-light/30"><div class="flex items-center justify-between mb-3"><span class="text-xs font-semibold text-neutral uppercase tracking-wider">Pemasukan</span><div class="w-9 h-9 rounded-lg bg-tertiary/10 flex items-center justify-center"><i class="fas fa-arrow-circle-down text-tertiary text-sm"></i></div></div><p class="font-display font-bold text-2xl text-tertiary stat-number" id="txn-masuk">Rp0</p><p class="text-xs text-tertiary mt-1" id="txn-masuk-pct"></p></div>
+                            <div class="card-hover bg-white rounded-2xl p-5 border border-neutral-light/30"><div class="flex items-center justify-between mb-3"><span class="text-xs font-semibold text-neutral uppercase tracking-wider">Pengeluaran</span><div class="w-9 h-9 rounded-lg bg-red-50 flex items-center justify-center"><i class="fas fa-arrow-circle-up text-red-400 text-sm"></i></div></div><p class="font-display font-bold text-2xl text-red-500 stat-number" id="txn-keluar">Rp0</p><p class="text-xs text-red-500 mt-1" id="txn-keluar-pct"></p></div>
+                        </div>
+                        <div class="flex flex-wrap items-center gap-2 no-print" id="filter-bar-txn">
+                            <span class="text-xs text-neutral font-medium mr-1"><i class="fas fa-calendar-alt mr-1"></i>Periode:</span>
+                            <button type="button" onclick="filterTime('minggu')" class="filter-btn active-time px-3 py-2 rounded-lg text-xs font-medium bg-neutral-50 text-neutral-dark hover:bg-neutral-100 transition-colors" data-time="minggu">Minggu Ini</button>
+                            <button type="button" onclick="filterTime('bulan')" class="filter-btn px-3 py-2 rounded-lg text-xs font-medium bg-neutral-50 text-neutral-dark hover:bg-neutral-100 transition-colors" data-time="bulan">Bulan Ini</button>
+                            <button type="button" onclick="filterTime('semua')" class="filter-btn px-3 py-2 rounded-lg text-xs font-medium bg-neutral-50 text-neutral-dark hover:bg-neutral-100 transition-colors" data-time="semua">Semua</button>
+                            <span class="text-neutral-light mx-1">|</span>
+                            <button type="button" onclick="filterType('semua')" class="filter-btn active-type px-3 py-2 rounded-lg text-xs font-medium bg-neutral-50 text-neutral-dark hover:bg-neutral-100 transition-colors" data-type="semua">Semua</button>
+                            <button type="button" onclick="filterType('pemasukan')" class="filter-btn px-3 py-2 rounded-lg text-xs font-medium bg-neutral-50 text-neutral-dark hover:bg-neutral-100 transition-colors" data-type="pemasukan">Pemasukan</button>
+                            <button type="button" onclick="filterType('pengeluaran')" class="filter-btn px-3 py-2 rounded-lg text-xs font-medium bg-neutral-50 text-neutral-dark hover:bg-neutral-100 transition-colors" data-type="pengeluaran">Pengeluaran</button>
+                            <div class="ml-auto"><div class="relative"><i class="fas fa-search absolute left-3 top-1/2 -translate-y-1/2 text-neutral-light text-sm"></i><input id="txn-search" oninput="applyFilters()" type="text" placeholder="Cari..." class="pl-9 pr-4 py-2 border border-neutral-light rounded-lg text-sm outline-none focus:border-tertiary transition-colors w-36"></div></div>
+                        </div>
+                        <div class="bg-white rounded-2xl border border-neutral-light/30 overflow-hidden"><div class="overflow-x-auto"><table class="w-full text-sm"><thead><tr class="bg-neutral-50/80"><th class="text-left px-5 py-3 font-semibold text-neutral text-xs uppercase tracking-wider">Tanggal</th><th class="text-left px-5 py-3 font-semibold text-neutral text-xs uppercase tracking-wider">Deskripsi</th><th class="text-left px-5 py-3 font-semibold text-neutral text-xs uppercase tracking-wider">Kategori</th><th class="text-left px-5 py-3 font-semibold text-neutral text-xs uppercase tracking-wider">Tipe</th><th class="text-right px-5 py-3 font-semibold text-neutral text-xs uppercase tracking-wider">Jumlah</th><th class="text-center px-5 py-3 font-semibold text-neutral text-xs uppercase tracking-wider">Status</th></tr></thead><tbody id="txn-table-body"></tbody></table></div></div>
+                    </div>
+
+                    <!-- LAPORAN -->
+                    <div id="page-laporan" class="page-enter space-y-6 hidden">
+                        <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                            <div class="card-hover bg-white rounded-2xl p-5 border border-neutral-light/30"><div class="flex items-center justify-between mb-3"><span class="text-xs font-semibold text-neutral uppercase tracking-wider">Saldo Saat Ini</span><div class="w-9 h-9 rounded-lg bg-primary/10 flex items-center justify-center"><i class="fas fa-wallet text-primary text-sm"></i></div></div><p class="font-display font-bold text-2xl text-primary-dark stat-number" id="lap-saldo">Rp0</p><p class="text-xs text-tertiary mt-1" id="lap-saldo-pct"></p></div>
+                            <div class="card-hover bg-white rounded-2xl p-5 border border-neutral-light/30"><div class="flex items-center justify-between mb-3"><span class="text-xs font-semibold text-neutral uppercase tracking-wider">Pemasukan</span><div class="w-9 h-9 rounded-lg bg-tertiary/10 flex items-center justify-center"><i class="fas fa-arrow-circle-down text-tertiary text-sm"></i></div></div><p class="font-display font-bold text-2xl text-tertiary stat-number" id="lap-masuk">Rp0</p><p class="text-xs text-tertiary mt-1" id="lap-masuk-pct"></p></div>
+                            <div class="card-hover bg-white rounded-2xl p-5 border border-neutral-light/30"><div class="flex items-center justify-between mb-3"><span class="text-xs font-semibold text-neutral uppercase tracking-wider">Pengeluaran</span><div class="w-9 h-9 rounded-lg bg-red-50 flex items-center justify-center"><i class="fas fa-arrow-circle-up text-red-400 text-sm"></i></div></div><p class="font-display font-bold text-2xl text-red-500 stat-number" id="lap-keluar">Rp0</p><p class="text-xs text-red-500 mt-1" id="lap-keluar-pct"></p></div>
+                        </div>
+                        <div class="flex flex-wrap items-center gap-2 no-print" id="filter-bar-lap">
+                            <span class="text-xs text-neutral font-medium mr-1"><i class="fas fa-calendar-alt mr-1"></i>Periode:</span>
+                            <button type="button" onclick="filterTime('minggu')" class="filter-btn active-time px-3 py-2 rounded-lg text-xs font-medium bg-neutral-50 text-neutral-dark hover:bg-neutral-100 transition-colors" data-time="minggu">Minggu Ini</button>
+                            <button type="button" onclick="filterTime('bulan')" class="filter-btn px-3 py-2 rounded-lg text-xs font-medium bg-neutral-50 text-neutral-dark hover:bg-neutral-100 transition-colors" data-time="bulan">Bulan Ini</button>
+                            <button type="button" onclick="filterTime('semua')" class="filter-btn px-3 py-2 rounded-lg text-xs font-medium bg-neutral-50 text-neutral-dark hover:bg-neutral-100 transition-colors" data-time="semua">Semua</button>
+                            <span class="text-neutral-light mx-1">|</span>
+                            <button type="button" onclick="filterType('semua')" class="filter-btn active-type px-3 py-2 rounded-lg text-xs font-medium bg-neutral-50 text-neutral-dark hover:bg-neutral-100 transition-colors" data-type="semua">Semua</button>
+                            <button type="button" onclick="filterType('pemasukan')" class="filter-btn px-3 py-2 rounded-lg text-xs font-medium bg-neutral-50 text-neutral-dark hover:bg-neutral-100 transition-colors" data-type="pemasukan">Pemasukan</button>
+                            <button type="button" onclick="filterType('pengeluaran')" class="filter-btn px-3 py-2 rounded-lg text-xs font-medium bg-neutral-50 text-neutral-dark hover:bg-neutral-100 transition-colors" data-type="pengeluaran">Pengeluaran</button>
+                            <div class="flex items-center gap-2 ml-auto no-print">
+                                <button type="button" onclick="exportCSV()" class="flex items-center gap-1.5 px-3 py-2 bg-tertiary/10 text-tertiary rounded-lg text-xs font-medium hover:bg-tertiary/20 transition-colors"><i class="fas fa-file-excel"></i> CSV</button>
+                                <button type="button" onclick="exportPDF()" class="flex items-center gap-1.5 px-3 py-2 bg-primary/10 text-primary rounded-lg text-xs font-medium hover:bg-primary/20 transition-colors"><i class="fas fa-file-pdf"></i> PDF</button>
+                            </div>
+                            <div><div class="relative"><i class="fas fa-search absolute left-3 top-1/2 -translate-y-1/2 text-neutral-light text-sm"></i><input id="lap-txn-search" oninput="applyFilters()" type="text" placeholder="Cari..." class="pl-9 pr-4 py-2 border border-neutral-light rounded-lg text-sm outline-none focus:border-tertiary transition-colors w-36"></div></div>
+                        </div>
+                        <div class="grid grid-cols-1 lg:grid-cols-3 gap-4">
+                            <div class="lg:col-span-2 card-hover bg-white rounded-2xl p-5 border border-neutral-light/30"><h3 class="font-semibold text-primary mb-4">Visualisasi Arus Kas</h3><div class="h-72"><canvas id="chart-arus-kas"></canvas></div></div>
+                            <div class="card-hover bg-white rounded-2xl p-5 border border-neutral-light/30"><h3 class="font-semibold text-primary mb-4">Alokasi Pengeluaran</h3><div class="space-y-4" id="alokasi-pct-list"></div><div class="mt-5 pt-4 border-t border-neutral-light/50 flex items-center justify-between"><span class="text-xs font-semibold text-neutral uppercase tracking-wider">Total Pengeluaran</span><span class="font-display font-bold text-sm text-neutral-dark" id="alokasi-total"></span></div></div>
+                        </div>
+                        <div class="bg-white rounded-2xl border border-neutral-light/30 overflow-hidden"><div class="overflow-x-auto"><table class="w-full text-sm"><thead><tr class="bg-neutral-50/80"><th class="text-left px-5 py-3 font-semibold text-neutral text-xs uppercase tracking-wider">Tanggal</th><th class="text-left px-5 py-3 font-semibold text-neutral text-xs uppercase tracking-wider">Deskripsi</th><th class="text-left px-5 py-3 font-semibold text-neutral text-xs uppercase tracking-wider">Kategori</th><th class="text-left px-5 py-3 font-semibold text-neutral text-xs uppercase tracking-wider">Tipe</th><th class="text-right px-5 py-3 font-semibold text-neutral text-xs uppercase tracking-wider">Jumlah</th><th class="text-center px-5 py-3 font-semibold text-neutral text-xs uppercase tracking-wider">Status</th></tr></thead><tbody id="lap-txn-table-body"></tbody></table></div></div>
+                    </div>
+
+                    <!-- ANGGOTA (UPDATED) -->
+                    <div id="page-anggota" class="page-enter space-y-6 hidden">
+                        <!-- Pengaturan Iuran -->
+                        <div class="card-hover bg-white rounded-2xl p-6 border border-neutral-light/30">
+                            <h3 class="font-semibold text-primary mb-4 flex items-center gap-2"><i class="fas fa-cogs text-secondary"></i> Pengaturan Iuran Kas</h3>
+                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4">
+                                <div>
+                                    <label class="block text-xs font-semibold text-neutral uppercase tracking-wider mb-1.5">Periode (Hari)</label>
+                                    <input id="dues-days" type="number" value="30" class="input-styled w-full px-4 py-2.5 border border-neutral-light rounded-xl text-sm outline-none transition-all">
+                                </div>
+                                <div>
+                                    <label class="block text-xs font-semibold text-neutral uppercase tracking-wider mb-1.5">Nominal (Rp)</label>
+                                    <input id="dues-amount" type="number" value="10000" class="input-styled w-full px-4 py-2.5 border border-neutral-light rounded-xl text-sm outline-none transition-all">
+                                </div>
+                            </div>
+                            <button type="button" onclick="saveDuesSettings()" class="px-6 py-2.5 bg-secondary text-white rounded-xl text-sm font-semibold hover:bg-secondary-dark transition-colors"><i class="fas fa-save mr-2"></i>Simpan Pengaturan Iuran</button>
+                        </div>
+
+                        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                            <!-- Form Tambah Anggota -->
+                            <div class="card-hover bg-white rounded-2xl p-6 border border-neutral-light/30">
+                                <h3 class="font-semibold text-primary mb-4 flex items-center gap-2"><i class="fas fa-user-plus text-tertiary"></i> Tambah Anggota</h3>
+                                <div class="space-y-4">
+                                    <div>
+                                        <label class="block text-xs font-semibold text-neutral uppercase tracking-wider mb-1.5">Nama Lengkap</label>
+                                        <input id="m-name" type="text" placeholder="Nama anggota" class="input-styled w-full px-4 py-2.5 border border-neutral-light rounded-xl text-sm outline-none transition-all">
+                                    </div>
+                                    <div>
+                                        <label class="block text-xs font-semibold text-neutral uppercase tracking-wider mb-1.5">NIM</label>
+                                        <input id="m-nim" type="text" placeholder="Nomor Induk Mahasiswa" class="input-styled w-full px-4 py-2.5 border border-neutral-light rounded-xl text-sm outline-none transition-all">
+                                    </div>
+                                    <div>
+                                        <label class="block text-xs font-semibold text-neutral uppercase tracking-wider mb-1.5">No. Telepon</label>
+                                        <input id="m-phone" type="tel" placeholder="08xxxxxxxxxx" class="input-styled w-full px-4 py-2.5 border border-neutral-light rounded-xl text-sm outline-none transition-all">
+                                    </div>
+                                    <button type="button" onclick="addNewMember()" class="w-full py-2.5 bg-tertiary text-white rounded-xl text-sm font-semibold hover:bg-tertiary-light transition-colors">Tambah Anggota</button>
+                                </div>
+                            </div>
+
+                            <!-- Daftar Anggota -->
+                            <div class="lg:col-span-2 card-hover bg-white rounded-2xl p-6 border border-neutral-light/30">
+                                <div class="flex items-center justify-between mb-4">
+                                    <h3 class="font-semibold text-primary">Daftar Anggota</h3>
+                                    <div class="flex items-center gap-2">
+                                        <button type="button" onclick="toggleAllPayments(true)" class="text-xs text-tertiary hover:text-tertiary-dark underline">Centang Semua</button>
+                                        <span class="text-neutral-light">|</span>
+                                        <button type="button" onclick="toggleAllPayments(false)" class="text-xs text-red-500 hover:text-red-600 underline">Batal Centang</button>
+                                    </div>
+                                </div>
+                                <div class="overflow-x-auto max-h-[400px]">
+                                    <table class="w-full text-sm">
+                                        <thead class="sticky top-0 bg-white z-10 shadow-sm">
+                                            <tr class="border-b border-neutral-light">
+                                                <th class="text-left py-3 px-2 font-semibold text-neutral text-xs uppercase tracking-wider">Nama</th>
+                                                <th class="text-left py-3 px-2 font-semibold text-neutral text-xs uppercase tracking-wider">NIM</th>
+                                                <th class="text-left py-3 px-2 font-semibold text-neutral text-xs uppercase tracking-wider">Telepon</th>
+                                                <th class="text-center py-3 px-2 font-semibold text-neutral text-xs uppercase tracking-wider">Status Bayar</th>
+                                                <th class="text-center py-3 px-2 font-semibold text-neutral text-xs uppercase tracking-wider">Aksi</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="members-table-body">
+                                            <!-- Data rendered via JS -->
+                                        </tbody>
+                                    </table>
+                                </div>
+                                
+                                <!-- Tombol Aksi Cepat -->
+                                <div class="mt-6 pt-6 border-t border-neutral-light/50 flex justify-between items-center">
+                                    <div class="text-xs text-neutral">
+                                        Sudah membayar: <span id="paid-count" class="font-bold text-tertiary">0</span> / <span id="total-count">0</span>
+                                    </div>
+                                    <button type="button" onclick="recordAllDues()" class="flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-tertiary to-teal-600 text-white rounded-xl text-sm font-bold shadow-lg hover:shadow-xl hover:scale-105 transition-all">
+                                        <i class="fas fa-hand-holding-usd"></i> Catat Iuran Sekarang
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- PENGATURAN (UPDATED - Removed Staff Management) -->
+                    <div id="page-pengaturan" class="page-enter space-y-6 hidden">
+                        <div class="card-hover bg-white rounded-2xl p-6 border border-neutral-light/30"><h3 class="font-semibold text-primary mb-5 flex items-center gap-2"><i class="fas fa-shield-alt text-secondary"></i> Keamanan Akun</h3><div class="space-y-4"><div><label class="block text-xs font-semibold text-neutral uppercase tracking-wider mb-1.5">Kata Sandi Lama</label><div class="relative"><input id="setting-old-pass" type="password" placeholder="Kata sandi lama" class="input-styled w-full px-4 py-2.5 border border-neutral-light rounded-xl text-sm outline-none transition-all pr-10"><button type="button" onclick="togglePass('setting-old-pass',this)" class="absolute right-3 top-1/2 -translate-y-1/2 text-neutral-light hover:text-neutral"><i class="fas fa-eye text-sm"></i></button></div></div><div class="grid grid-cols-1 sm:grid-cols-2 gap-4"><div><label class="block text-xs font-semibold text-neutral uppercase tracking-wider mb-1.5">Kata Sandi Baru</label><div class="relative"><input id="setting-new-pass" type="password" placeholder="Minimal 8 karakter" class="input-styled w-full px-4 py-2.5 border border-neutral-light rounded-xl text-sm outline-none transition-all pr-10" oninput="updateSettingPassStrength()"><button type="button" onclick="togglePass('setting-new-pass',this)" class="absolute right-3 top-1/2 -translate-y-1/2 text-neutral-light hover:text-neutral"><i class="fas fa-eye text-sm"></i></button></div><div id="setting-pass-strength" class="mt-2 flex gap-1 items-center"></div></div><div><label class="block text-xs font-semibold text-neutral uppercase tracking-wider mb-1.5">Konfirmasi</label><div class="relative"><input id="setting-confirm-pass" type="password" placeholder="Ulangi kata sandi baru" class="input-styled w-full px-4 py-2.5 border border-neutral-light rounded-xl text-sm outline-none transition-all pr-10" oninput="checkSettingPassMatch()"><button type="button" onclick="togglePass('setting-confirm-pass',this)" class="absolute right-3 top-1/2 -translate-y-1/2 text-neutral-light hover:text-neutral"><i class="fas fa-eye text-sm"></i></button></div><div id="setting-pass-match" class="hidden text-xs px-3 py-2 rounded-lg mt-1"></div></div></div><button type="button" onclick="handleSettingChangePassword()" class="px-6 py-2.5 bg-primary text-white rounded-xl text-sm font-semibold hover:bg-primary-light transition-colors">Ubah Kata Sandi</button></div><div class="border-t border-neutral-light/50 pt-5 mt-5"><h4 class="text-sm font-semibold text-neutral-dark mb-2 flex items-center gap-2"><i class="fas fa-history text-secondary text-xs"></i> Riwayat Sesi</h4><div class="flex items-center gap-3 p-3 bg-tertiary-50 rounded-xl border border-tertiary/10"><div class="w-9 h-9 rounded-lg bg-tertiary flex items-center justify-center flex-shrink-0"><i class="fas fa-desktop text-white text-sm"></i></div><div class="flex-1 min-w-0"><p class="text-sm font-medium text-neutral-dark truncate">Chrome di Windows</p><p class="text-xs text-neutral">Jakarta, Indonesia</p></div><span class="text-[10px] font-semibold text-tertiary bg-tertiary-50 px-2 py-1 rounded-md flex-shrink-0">Aktif</span></div></div></div>
+                    </div>
+
+                </main>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL TAMBAH TRANSAKSI -->
+    <div id="modal-tambah" class="modal-backdrop fixed inset-0 bg-black/50 z-[60] hidden flex items-center justify-center p-4" onclick="if(event.target===this)closeModal('modal-tambah')">
+        <div class="modal-content bg-white rounded-2xl shadow-2xl w-full max-w-lg max-h-[90vh] overflow-y-auto">
+            <div class="flex items-center justify-between p-5 border-b border-neutral-light/50 sticky top-0 bg-white rounded-t-2xl z-10"><h3 class="font-semibold text-primary text-lg">Tambah Transaksi</h3><button type="button" onclick="closeModal('modal-tambah')" class="w-8 h-8 rounded-lg hover:bg-neutral-50 flex items-center justify-center text-neutral"><i class="fas fa-times"></i></button></div>
+            <div class="p-5 space-y-4">
+                <div class="grid grid-cols-2 gap-4"><div><label class="block text-xs font-semibold text-neutral uppercase tracking-wider mb-1.5">Tanggal</label><input id="txn-date" type="date" class="input-styled w-full px-4 py-2.5 border border-neutral-light rounded-xl text-sm outline-none transition-all"></div><div><label class="block text-xs font-semibold text-neutral uppercase tracking-wider mb-1.5">Tipe</label><select id="txn-type" class="input-styled w-full px-4 py-2.5 border border-neutral-light rounded-xl text-sm outline-none transition-all"><option value="pemasukan">Pemasukan</option><option value="pengeluaran">Pengeluaran</option></select></div></div>
+                <div><label class="block text-xs font-semibold text-neutral uppercase tracking-wider mb-1.5">Deskripsi</label><input id="txn-desc" type="text" placeholder="Contoh: Pembelian ATK" class="input-styled w-full px-4 py-2.5 border border-neutral-light rounded-xl text-sm outline-none transition-all"></div>
+                <div class="grid grid-cols-2 gap-4"><div><label class="block text-xs font-semibold text-neutral uppercase tracking-wider mb-1.5">Kategori</label><select id="txn-cat" class="input-styled w-full px-4 py-2.5 border border-neutral-light rounded-xl text-sm outline-none transition-all"><option>Operasional</option><option>Event</option><option>Sponsor</option><option>Logistik</option><option>Kepegawaian</option><option>Lainnya</option></select></div><div><label class="block text-xs font-semibold text-neutral uppercase tracking-wider mb-1.5">Jumlah (Rp)</label><input id="txn-amount" type="number" placeholder="0" class="input-styled w-full px-4 py-2.5 border border-neutral-light rounded-xl text-sm outline-none transition-all"></div></div>
+                <div><label class="block text-xs font-semibold text-neutral uppercase tracking-wider mb-1.5">Catatan (Opsional)</label><textarea id="txn-note" rows="2" placeholder="Tambahkan catatan..." class="input-styled w-full px-4 py-2.5 border border-neutral-light rounded-xl text-sm outline-none transition-all resize-none"></textarea></div>
+                <div><label class="block text-xs font-semibold text-neutral uppercase tracking-wider mb-1.5">Bukti Transaksi</label><div id="upload-zone" class="upload-zone p-5 text-center cursor-pointer" onclick="document.getElementById('txn-file').click()" ondragover="event.preventDefault();this.classList.add('drag-over')" ondragleave="this.classList.remove('drag-over')" ondrop="handleFileDrop(event)"><input id="txn-file" type="file" class="hidden" accept=".jpg,.jpeg,.png,.pdf,.doc,.docx" onchange="handleFileSelect(this)" multiple><div id="upload-placeholder"><div class="w-12 h-12 rounded-full bg-neutral-50 flex items-center justify-center mx-auto mb-3"><i class="fas fa-cloud-upload-alt text-neutral-light text-xl"></i></div><p class="text-sm font-medium text-neutral-dark">Klik atau seret file ke sini</p><p class="text-xs text-neutral mt-1">JPG, PNG, PDF, DOC (Maks. 10MB)</p></div><div id="upload-preview" class="hidden space-y-2"></div></div></div>
+            </div>
+            <div class="flex gap-3 p-5 border-t border-neutral-light/50 sticky bottom-0 bg-white rounded-b-2xl"><button type="button" onclick="closeModal('modal-tambah')" class="flex-1 py-2.5 border border-neutral-light rounded-xl text-sm font-semibold text-neutral-dark hover:bg-neutral-50 transition-colors">Batal</button><button type="button" onclick="addTransaction()" class="flex-1 py-2.5 bg-tertiary text-white rounded-xl text-sm font-semibold hover:bg-tertiary-light transition-colors">Simpan</button></div>
+        </div>
+    </div>
+
+    <!-- MODAL EDIT REALISASI -->
+    <div id="modal-edit-real" class="modal-backdrop fixed inset-0 bg-black/50 z-[60] hidden flex items-center justify-center p-4" onclick="if(event.target===this)closeModal('modal-edit-real')">
+        <div class="modal-content bg-white rounded-2xl shadow-2xl w-full max-w-md max-h-[85vh] overflow-hidden flex flex-col">
+            <div class="flex items-center justify-between p-5 border-b border-neutral-light/50 flex-shrink-0"><h3 class="font-semibold text-primary">Revisi Realisasi Anggaran</h3><button type="button" onclick="closeModal('modal-edit-real')" class="w-8 h-8 rounded-lg hover:bg-neutral-50 flex items-center justify-center text-neutral"><i class="fas fa-times"></i></button></div>
+            <div class="p-5 space-y-3 overflow-y-auto flex-1" id="edit-real-form"></div>
+            <div class="flex gap-3 p-5 border-t border-neutral-light/50 flex-shrink-0"><button type="button" onclick="closeModal('modal-edit-real')" class="flex-1 py-2.5 border border-neutral-light rounded-xl text-sm font-semibold text-neutral-dark hover:bg-neutral-50 transition-colors">Batal</button><button type="button" onclick="saveEditAllPrograms()" class="flex-1 py-2.5 bg-tertiary text-white rounded-xl text-sm font-semibold hover:bg-tertiary-light transition-colors">Simpan</button></div>
+        </div>
+    </div>
+
+    <!-- MODAL AGENDA -->
+    <div id="modal-agenda" class="modal-backdrop fixed inset-0 bg-black/50 z-[60] hidden flex items-center justify-center p-4" onclick="if(event.target===this)closeModal('modal-agenda')">
+        <div class="modal-content bg-white rounded-2xl shadow-2xl w-full max-w-sm">
+            <div class="flex items-center justify-between p-5 border-b border-neutral-light/50"><h3 id="agenda-modal-title" class="font-semibold text-primary">Tambah Agenda</h3><button type="button" onclick="closeModal('modal-agenda')" class="w-8 h-8 rounded-lg hover:bg-neutral-50 flex items-center justify-center text-neutral"><i class="fas fa-times"></i></button></div>
+            <div class="p-5 space-y-4"><input type="hidden" id="agenda-edit-id" value=""><div><label class="block text-xs font-semibold text-neutral uppercase tracking-wider mb-1.5">Nama Pembayaran</label><input id="agenda-name" type="text" placeholder="Contoh: Sewa Aula" class="input-styled w-full px-4 py-2.5 border border-neutral-light rounded-xl text-sm outline-none transition-all"></div><div><label class="block text-xs font-semibold text-neutral uppercase tracking-wider mb-1.5">Jumlah (Rp)</label><input id="agenda-amount" type="number" placeholder="0" class="input-styled w-full px-4 py-2.5 border border-neutral-light rounded-xl text-sm outline-none transition-all"></div><div><label class="block text-xs font-semibold text-neutral uppercase tracking-wider mb-1.5">Tanggal Jatuh Tempo</label><input id="agenda-date" type="text" placeholder="15 Okt 2024" class="input-styled w-full px-4 py-2.5 border border-neutral-light rounded-xl text-sm outline-none transition-all"></div></div>
+            <div class="flex gap-3 p-5 border-t border-neutral-light/50"><button type="button" onclick="closeModal('modal-agenda')" class="flex-1 py-2.5 border border-neutral-light rounded-xl text-sm font-semibold text-neutral-dark hover:bg-neutral-50 transition-colors">Batal</button><button type="button" onclick="saveAgenda()" class="flex-1 py-2.5 bg-tertiary text-white rounded-xl text-sm font-semibold hover:bg-tertiary-light transition-colors">Simpan</button></div>
+        </div>
+    </div>
+
+    <!-- MODAL NOTIFIKASI -->
+    <div id="modal-notif" class="modal-backdrop fixed inset-0 bg-black/50 z-[60] hidden flex items-start justify-end p-4 pt-16" onclick="if(event.target===this)closeModal('modal-notif')">
+        <div class="modal-content bg-white rounded-2xl shadow-2xl w-full max-w-sm overflow-hidden">
+            <div class="flex items-center justify-between p-4 border-b border-neutral-light/50"><h3 class="font-semibold text-primary">Notifikasi</h3><button type="button" onclick="markAllRead()" class="text-xs text-tertiary font-semibold hover:text-tertiary-dark">Tandai semua dibaca</button></div>
+            <div class="max-h-80 overflow-y-auto" id="notif-list"></div>
+        </div>
+    </div>
+
+    <!-- MODAL INFO ORGANISASI -->
+    <div id="modal-org-info" class="modal-backdrop fixed inset-0 bg-black/50 z-[60] hidden flex items-center justify-center p-4" onclick="if(event.target===this)closeModal('modal-org-info')">
+        <div class="modal-content bg-white rounded-2xl shadow-2xl w-full max-w-lg max-h-[85vh] overflow-hidden flex flex-col">
+            <div class="flex items-center justify-between p-5 border-b border-neutral-light/50 flex-shrink-0"><h3 class="font-semibold text-primary">Profil Organisasi</h3><button type="button" onclick="closeModal('modal-org-info')" class="w-8 h-8 rounded-lg hover:bg-neutral-50 flex items-center justify-center text-neutral"><i class="fas fa-times"></i></button></div>
+            <div class="flex-1 overflow-y-auto">
+                <div id="org-info-header"></div>
+                <div class="px-6 pt-5 pb-4" id="org-info-grid"></div>
+                <div class="px-6 pb-4" id="org-info-desc"></div>
+                <div class="mx-6 border-t border-neutral-light/50"></div>
+                <div class="px-6 pt-4 pb-5" id="org-info-members"></div>
+            </div>
+            <div class="flex gap-3 p-5 border-t border-neutral-light/50 flex-shrink-0"><button type="button" onclick="closeModal('modal-org-info')" class="flex-1 py-2.5 border border-neutral-light rounded-xl text-sm font-semibold text-neutral-dark hover:bg-neutral-50 transition-colors">Tutup</button></div>
+        </div>
+    </div>
+
+    <div id="toast-container" class="fixed top-4 right-4 z-[100] space-y-2"></div>
+
+    <!-- Link ke File JS Eksternal (Diletakkan di akhir body) -->
+    <script src="script.js"></script>
+</body>
+</html>
