@@ -28,7 +28,7 @@
 .pct-bar-track{height:10px;border-radius:5px;background:#ECEFF1;overflow:hidden}.pct-bar-fill{height:100%;border-radius:5px;transition:width .8s ease-out}
 .otp-digit{width:2.75rem;height:3.25rem}
 .org-card-clickable{cursor:pointer;transition:all .2s ease}.org-card-clickable:hover{background:rgba(255,255,255,.15)}
-.member-avatar{width:40px;height:40px;border-radius:10px;overflow:hidden;flex-shrink-0;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:13px;color:#fff}
+.member-avatar{width:40px;height:40px;border-radius:10px;overflow:hidden;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:13px;color:#fff}
 .member-row{transition:background .15s ease}.member-row:hover{background:rgba(0,105,92,.04)}
 @media(max-width:1023px){.sidebar{transform:translateX(-100%);z-index:50}.sidebar.open{transform:translateX(0)}.main-scroll{margin-left:0}.agenda-actions{opacity:1}}
 @media print{.sidebar,.no-print{display:none!important}.main-scroll{margin-left:0!important}.content-scroll{overflow:visible!important}}

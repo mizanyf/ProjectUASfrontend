@@ -7,14 +7,15 @@ var state = {
     charts:{}, uploadedFiles:[], profileEditOpen:false, forgotEmail:'',
     // Set default foto profil ke Logo MoneFlo
     profile:{name:'BEM Fakultas Furap', type:'Kemahasiswaan', email:'bem.furap@univ.ac.id', phone:'0812-3456-7890', photo:LOGO_MONEFLO, description:'BEM Fakultas Furap merupakan badan eksekutif mahasiswa.'},
+    // UPDATED: Status 'DIPROSES' removed from dummy data. All 'SELESAI'.
     transactions:[
-        {id:1,date:'2024-10-25',desc:'Pembelian Banner Dies Natalis',cat:'Event',type:'pengeluaran',amount:350000,status:'DIPROSES',docs:[]},
+        {id:1,date:'2024-10-25',desc:'Pembelian Banner Dies Natalis',cat:'Event',type:'pengeluaran',amount:350000,status:'SELESAI',docs:[]},
         {id:2,date:'2024-10-24',desc:'Iuran Anggota Minggu Ini',cat:'Operasional',type:'pemasukan',amount:800000,status:'SELESAI',docs:[]},
         {id:3,date:'2024-10-23',desc:'Konsumsi Rapat Koordinasi',cat:'Operasional',type:'pengeluaran',amount:375000,status:'SELESAI',docs:[]},
-        {id:4,date:'2024-10-22',desc:'Cetak Brosur',cat:'Operasional',type:'pengeluaran',amount:420000,status:'DIPROSES',docs:[]},
+        {id:4,date:'2024-10-22',desc:'Cetak Brosur',cat:'Operasional',type:'pengeluaran',amount:420000,status:'SELESAI',docs:[]},
         {id:5,date:'2024-10-21',desc:'Sponsorship PT. Maju Jaya',cat:'Sponsor',type:'pemasukan',amount:5000000,status:'SELESAI',docs:['invoice.pdf']},
         {id:6,date:'2024-10-19',desc:'Dana Kepegawaian',cat:'Kepegawaian',type:'pengeluaran',amount:750000,status:'SELESAI',docs:[]},
-        {id:7,date:'2024-10-18',desc:'Logistik & Alat Tulis',cat:'Logistik',type:'pengeluaran',amount:1240000,status:'DIPROSES',docs:['nota_atk.jpg']},
+        {id:7,date:'2024-10-18',desc:'Logistik & Alat Tulis',cat:'Logistik',type:'pengeluaran',amount:1240000,status:'SELESAI',docs:['nota_atk.jpg']},
         {id:8,date:'2024-10-15',desc:'Sewa Sound System',cat:'Event',type:'pengeluaran',amount:850000,status:'SELESAI',docs:['kwitansi.jpg']},
         {id:9,date:'2024-10-14',desc:'Dana Donatur Alumni',cat:'Sponsor',type:'pemasukan',amount:1500000,status:'SELESAI',docs:['donasi.pdf']},
         {id:10,date:'2024-10-10',desc:'Iuran Anggota Awal Bulan',cat:'Operasional',type:'pemasukan',amount:1100000,status:'SELESAI',docs:[]},
@@ -122,7 +123,11 @@ function updateAllStatCards(){
 }
 function renderFilteredTable(bodyId,data){
     var el=document.getElementById(bodyId);if(!el)return;var html='';
-    for(var i=0;i<data.length;i++){var t=data[i],isM=t.type==='pemasukan';var docS=t.docs.length?' <span class="ml-1 inline-flex items-center text-[10px] text-neutral cursor-help" title="'+t.docs.join(', ')+'"><i class="fas fa-paperclip"></i>'+t.docs.length+'</span>':'';var stC=t.status==='SELESAI'?'bg-tertiary-50 text-tertiary':'bg-amber-50 text-amber-700';html+='<tr class="border-t border-neutral-light/30 hover:bg-neutral-50/50 transition-colors"><td class="px-5 py-3 text-neutral whitespace-nowrap">'+formatDate(t.date)+'</td><td class="px-5 py-3 text-neutral-dark font-medium">'+t.desc+docS+'</td><td class="px-5 py-3"><span class="px-2.5 py-1 bg-neutral-50 rounded-md text-xs font-medium text-neutral-dark">'+t.cat+'</span></td><td class="px-5 py-3"><span class="inline-flex items-center gap-1.5 text-xs font-semibold '+(isM?'text-tertiary':'text-red-500')+'"><i class="fas '+(isM?'fa-arrow-down':'fa-arrow-up')+' text-[10px]"></i>'+(isM?'Masuk':'Keluar')+'</span></td><td class="px-5 py-3 text-right font-display font-semibold '+(isM?'text-tertiary':'text-red-500')+'">'+(isM?'+':'-')+formatRupiah(t.amount)+'</td><td class="px-5 py-3 text-center"><span class="inline-flex px-2.5 py-1 rounded-md text-[11px] font-semibold '+stC+'">'+t.status+'</span></td></tr>';}
+    // UPDATED: Status logic simplified. Always 'SELESAI'.
+    for(var i=0;i<data.length;i++){var t=data[i],isM=t.type==='pemasukan';var docS=t.docs.length?' <span class="ml-1 inline-flex items-center text-[10px] text-neutral cursor-help" title="'+t.docs.join(', ')+'"><i class="fas fa-paperclip"></i>'+t.docs.length+'</span>':''; 
+    var stC='bg-tertiary-50 text-tertiary'; // Always Completed
+    
+    html+='<tr class="border-t border-neutral-light/30 hover:bg-neutral-50/50 transition-colors"><td class="px-5 py-3 text-neutral whitespace-nowrap">'+formatDate(t.date)+'</td><td class="px-5 py-3 text-neutral-dark font-medium">'+t.desc+docS+'</td><td class="px-5 py-3"><span class="px-2.5 py-1 bg-neutral-50 rounded-md text-xs font-medium text-neutral-dark">'+t.cat+'</span></td><td class="px-5 py-3"><span class="inline-flex items-center gap-1.5 text-xs font-semibold '+(isM?'text-tertiary':'text-red-500')+'"><i class="fas '+(isM?'fa-arrow-down':'fa-arrow-up')+' text-[10px]"></i>'+(isM?'Masuk':'Keluar')+'</span></td><td class="px-5 py-3 text-right font-display font-semibold '+(isM?'text-tertiary':'text-red-500')+'">'+(isM?'+':'-')+formatRupiah(t.amount)+'</td><td class="px-5 py-3 text-center"><span class="inline-flex px-2.5 py-1 rounded-md text-[11px] font-semibold '+stC+'">SELESAI</span></td></tr>';}
     if(!data.length)html='<tr><td colspan="6" class="px-5 py-8 text-center text-neutral text-sm">Tidak ada transaksi ditemukan</td></tr>';
     el.innerHTML=html;
 }
@@ -331,7 +336,10 @@ function processFiles(files){var maxSz=10*1024*1024,okT=['image/jpeg','image/png
 function renderFilePreview(){var zone=document.getElementById('upload-zone'),ph=document.getElementById('upload-placeholder'),pv=document.getElementById('upload-preview');if(!state.uploadedFiles.length){ph.classList.remove('hidden');pv.classList.add('hidden');zone.classList.remove('has-file');return;}ph.classList.add('hidden');pv.classList.remove('hidden');zone.classList.add('has-file');var iconMap={PDF:'fa-file-pdf text-red-400',JPG:'fa-file-image text-blue-400',JPEG:'fa-file-image text-blue-400',PNG:'fa-file-image text-emerald-400',DOC:'fa-file-word text-blue-500',DOCX:'fa-file-word text-blue-500'},html='';for(var i=0;i<state.uploadedFiles.length;i++){var f=state.uploadedFiles[i],ext=f.name.split('.').pop().toUpperCase(),sz=f.size<1048576?(f.size/1024).toFixed(1)+' KB':(f.size/1048576).toFixed(1)+' MB',ic=iconMap[ext]||'fa-file text-neutral-light';html+='<div class="flex items-center gap-3 p-3 bg-neutral-50 rounded-xl"><div class="w-10 h-10 rounded-lg bg-white flex items-center justify-center flex-shrink-0 shadow-sm"><i class="fas '+ic+'"></i></div><div class="flex-1 min-w-0"><p class="text-sm font-medium text-neutral-dark truncate">'+f.name+'</p><p class="text-[11px] text-neutral">'+sz+'</p></div><button type="button" onclick="removeFile('+i+')" class="w-8 h-8 rounded-lg hover:bg-red-50 flex items-center justify-center text-neutral-light hover:text-red-500 transition-colors flex-shrink-0"><i class="fas fa-times text-sm"></i></button></div>';}pv.innerHTML=html;}
 function removeFile(idx){state.uploadedFiles.splice(idx,1);renderFilePreview();}
 
-function addTransaction(){var date=document.getElementById('txn-date').value,desc=document.getElementById('txn-desc').value.trim(),cat=document.getElementById('txn-cat').value,type=document.getElementById('txn-type').value,amount=parseInt(document.getElementById('txn-amount').value);if(!date){showToast('Pilih tanggal','error');return;}if(!desc){showToast('Isi deskripsi','error');return;}if(!amount||amount<=0){showToast('Masukkan jumlah yang valid','error');return;}var docs=[];for(var i=0;i<state.uploadedFiles.length;i++)docs.push(state.uploadedFiles[i].name);state.transactions.push({id:state.nextTxnId++,date:date,desc:desc,cat:cat,type:type,amount:amount,status:'DIPROSES',docs:docs});state.uploadedFiles=[];document.getElementById('txn-date').value='';document.getElementById('txn-desc').value='';document.getElementById('txn-amount').value='';document.getElementById('txn-note').value='';renderFilePreview();closeModal('modal-tambah');showToast('Transaksi berhasil ditambahkan','success');applyFilters();state.notifications.unshift({text:'Transaksi "'+desc+'" berhasil ditambahkan',time:'Baru saja',read:false,icon:'fa-check-circle',iconColor:'text-tertiary'});updateNotifBadge();}
+function addTransaction(){var date=document.getElementById('txn-date').value,desc=document.getElementById('txn-desc').value.trim(),cat=document.getElementById('txn-cat').value,type=document.getElementById('txn-type').value,amount=parseInt(document.getElementById('txn-amount').value);if(!date){showToast('Pilih tanggal','error');return;}if(!desc){showToast('Isi deskripsi','error');return;}if(!amount||amount<=0){showToast('Masukkan jumlah yang valid','error');return;}var docs=[];for(var i=0;i<state.uploadedFiles.length;i++)docs.push(state.uploadedFiles[i].name);
+// UPDATED: Set status to 'SELESAI' directly
+state.transactions.push({id:state.nextTxnId++,date:date,desc:desc,cat:cat,type:type,amount:amount,status:'SELESAI',docs:docs});
+state.uploadedFiles=[];document.getElementById('txn-date').value='';document.getElementById('txn-desc').value='';document.getElementById('txn-amount').value='';document.getElementById('txn-note').value='';renderFilePreview();closeModal('modal-tambah');showToast('Transaksi berhasil ditambahkan','success');applyFilters();state.notifications.unshift({text:'Transaksi "'+desc+'" berhasil ditambahkan',time:'Baru saja',read:false,icon:'fa-check-circle',iconColor:'text-tertiary'});updateNotifBadge();}
 
 function initBeranda(){
     // SAFETY CHECK: Cek apakah Chart.js sudah dimuat
@@ -341,11 +349,8 @@ function initBeranda(){
         console.error("Chart.js gagal dimuat. Grafik Beranda tidak akan tampil.");
         document.getElementById('chart-beranda').parentElement.innerHTML = '<div class="flex items-center justify-center h-full text-neutral text-sm">Grafik tidak tersedia (Offline/CDN Error)</div>';
     }
-    renderProgressBars();
-    renderAgenda();
-    applyFilters();
+    renderProgressBars();renderAgenda();applyFilters();
 }
-
 function renderBerandaChart(){
     // SAFETY CHECK: Cek lagi di dalam fungsi render
     if(typeof Chart === 'undefined') return;
@@ -379,8 +384,7 @@ function initLaporan(){
     } else {
         document.getElementById('chart-arus-kas').parentElement.innerHTML = '<div class="flex items-center justify-center h-full text-neutral text-sm">Grafik tidak tersedia (Offline/CDN Error)</div>';
     }
-    renderAlokasiPct();
-    applyFilters();
+    renderAlokasiPct();applyFilters();
 }
 function renderArusKasChart(){
     if(typeof Chart === 'undefined') return;
