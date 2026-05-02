@@ -35,7 +35,11 @@ export const LupaKataSandi = ({ goToLogin, goToVerifikasi }) => {
     });
 
     setTimeout(() => {
-      goToVerifikasi();
+      // Kirim email dan flag dari Lupa Password
+      goToVerifikasi({ 
+        fromRegister: false,
+        email: email  // kirim email yang dimasukkan
+      });
     }, 1500);
   };
 
@@ -96,7 +100,10 @@ export const LupaKataSandi = ({ goToLogin, goToVerifikasi }) => {
           className="mt-6 text-sm text-gray-500 flex items-center justify-center gap-2 mx-auto w-fit cursor-pointer transition-colors duration-200 hover:text-[#083d56]"
         >
           <i className="fas fa-arrow-left text-xs"></i>
+
+          <span className="[font-family:'Plus_Jakarta_Sans-SemiBold',Helvetica] font-semibold text-grey text-sm text-center tracking-[0] leading-5">
           Kembali ke Masuk
+          </span>
         </button>
       </AuthLayout>
     </>

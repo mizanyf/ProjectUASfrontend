@@ -1,13 +1,19 @@
-import { useId, useMemo, useState } from "react";
-import logo from "../assets/MoneFloLogo.png";
+import { useId, useMemo, useState, useEffect } from "react";
+import AuthLayout from "../components/AuthLayout";
 import Toast from "../components/Toast";
 
-export const Register = ({ goToLogin }) => {
+export const Register = ({ goToLogin, goToVerifikasi }) => {
   const formId = useId();
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
-  const [showSuccess, setShowSuccess] = useState(false);
+
+  const [toast, setToast] = useState({
+    show: false,
+    message: "",
+    type: "success",
+  });
+
   const [formData, setFormData] = useState({
     organizationName: "",
     organizationType: "",
@@ -18,327 +24,307 @@ export const Register = ({ goToLogin }) => {
     confirmPassword: "",
   });
 
-  const fieldIds = useMemo(
-    () => ({
-      organizationName: `${formId}-organization-name`,
-      organizationType: `${formId}-organization-type`,
-      officialEmail: `${formId}-official-email`,
-      phone: `${formId}-phone`,
-      description: `${formId}-description`,
-      password: `${formId}-password`,
-      confirmPassword: `${formId}-confirm-password`,
-    }),
-    [formId],
-  );
+  useEffect(() => {
+    if (toast.show) {
+      const timer = setTimeout(() => {
+        setToast((prev) => ({ ...prev, show: false }));
+      }, 1500);
+      return () => clearTimeout(timer);
+    }
+  }, [toast.show]);
 
-  const organizationTypes = [
-    "BEM",
-    "Himpunan Mahasiswa",
-    "UKM",
-    "Komunitas",
-    "Organisasi Sosial",
-  ];
+  // LOGIKA KEKUATAN DIPERKETAT (sama dengan BuatSandiBaru)
+  const getStrengthLevel = (password) => {
+    if (!password) return 0;
+    let points = 0;
+
+    // Kriteria panjang
+    if (password.length >= 8) points++;
+    if (password.length >= 12) points++;
+    
+    // Kriteria kompleksitas
+    if (/[A-Z]/.test(password) && /[a-z]/.test(password)) points++; // Ada besar & kecil
+    if (/[0-9]/.test(password)) points++; // Ada angka
+    if (/[^A-Za-z0-9]/.test(password)) points++; // Ada simbol
+
+    // Penalti: Jika kurang dari 8 karakter, maksimal poin hanya 2 (Lemah)
+    if (password.length < 8 && points > 2) points = 2;
+
+    return Math.min(points, 5); 
+  };
+
+  const strengthLevel = getStrengthLevel(formData.password);
+
+  const getStrengthInfo = (level) => {
+    if (level === 0) return { label: "", color: "bg-gray-100", text: "text-gray-400" };
+    if (level <= 2) return { label: "Lemah", color: "bg-red-500", text: "text-red-500" };
+    if (level <= 3) return { label: "Cukup", color: "bg-yellow-500", text: "text-yellow-500" };
+    if (level === 4) return { label: "Kuat", color: "bg-[#00a67e]", text: "text-[#00a67e]" };
+    return { label: "Sangat Kuat", color: "bg-[#008966]", text: "text-[#008966]" };
+  };
+
+  const strength = getStrengthInfo(strengthLevel);
+  const isPasswordMatch = formData.password && formData.confirmPassword && formData.password === formData.confirmPassword;
+
+  const organizationTypes = ["BEM", "Himpunan Mahasiswa", "UKM", "Komunitas", "Organisasi Sosial"];
 
   const handleChange = (event) => {
     const { name, value } = event.target;
-    setFormData((current) => ({
-      ...current,
-      [name]: value,
-    }));
+    setFormData((current) => ({ ...current, [name]: value }));
   };
 
   const handleSubmit = (event) => {
     event.preventDefault();
+    if (!isPasswordMatch) return;
 
-    setShowSuccess(true);
+    setToast({
+      show: true,
+      message: "Kode verifikasi telah dikirim",
+      type: "info",
+    });
 
     setTimeout(() => {
-        setShowSuccess(false);
-        goToLogin();
-    }, 2000);
+      /// Kirim email dan flag dari Register
+      goToVerifikasi({ 
+        fromRegister: true,
+        email: formData.officialEmail  // kirim email yang didaftarkan
+      });
+    }, 1500);
   };
 
   return (
-  <>
-    {showSuccess && (
-      <Toast
-        message="Organisasi berhasil didaftarkan!"
-        type="success"
-        onClose={() => setShowSuccess(false)}
-      />
-    )}
+    <>
+      {toast.show && (
+        <Toast
+          message={toast.message}
+          type={toast.type}
+          onClose={() => setToast((prev) => ({ ...prev, show: false }))}
+        />
+      )}
 
-    <main className="min-h-screen w-full flex bg-[linear-gradient(0deg,rgba(245,245,245,1)_0%,rgba(245,245,245,1)_100%),linear-gradient(0deg,rgba(255,255,255,1)_0%,rgba(255,255,255,1)_100%)]">
-      <section className="flex-1 relative overflow-hidden flex flex-col items-center justify-center p-4 py-12 md:p-8 bg-[linear-gradient(148deg,rgba(8,61,86,1)_0%,rgba(12,82,114,1)_40%,rgba(0,105,92,1)_100%)]">
-        
-        {/* Dekorasi Background */}
-        <div className="absolute -top-[100px] -right-[100px] w-[300px] h-[300px] md:w-[500px] md:h-[500px] bg-[#00695c26] rounded-full" />
-        <div className="absolute -left-20 -bottom-20 w-[250px] h-[250px] md:w-[350px] md:h-[350px] bg-[#546e7a1f] rounded-full" />
+      <AuthLayout subtitle="Daftarkan Organisasi Anda">
+        <h1 className="text-xl font-bold text-[#083d56]">Buat Akun Organisasi</h1>
+        <p className="text-sm text-gray-500 mt-1">Lengkapi data identitas organisasi di bawah ini.</p>
 
-        {/* Header App */}
-        <div className="relative z-10 flex flex-col items-center mb-8">
-           <img
-                src={logo}
-                alt="MoneFlo Logo"
-                className="w-14 h-14 rounded-lg object-contain"
-              />
-          <h1 className="[font-family:'Space_Grotesk-Bold',Helvetica] font-bold text-white text-3xl text-center tracking-[0] leading-9 mb-1">
-            MoneFlo
-          </h1>
-          <p className="[font-family:'Plus_Jakarta_Sans-Regular',Helvetica] font-normal text-[#ffffff99] text-sm text-center tracking-[0] leading-5">
-            Daftarkan Organisasi Anda
-          </p>
-        </div>
-
-        {/* Card Form */}
-        <section className="relative z-10 w-full max-w-[500px] bg-white rounded-2xl shadow-[0px_25px_50px_-12px_#00000040] p-6 sm:p-8">
-          <div className="mb-6">
-            <h2 className="[font-family:'Plus_Jakarta_Sans-Bold',Helvetica] font-bold text-[#083d56] text-xl tracking-[0] leading-7 mb-2">
-              Buat Akun Organisasi
-            </h2>
-            <p className="[font-family:'Plus_Jakarta_Sans-Regular',Helvetica] font-normal text-[#767779] text-sm tracking-[0] leading-5">
-              Lengkapi data identitas organisasi di bawah ini.
-            </p>
+        <form onSubmit={handleSubmit} className="mt-6 space-y-4">
+          {/* Nama Organisasi */}
+          <div>
+            <label className="text-sm text-[#083d56]">Nama Organisasi <span className="text-red-500">*</span></label>
+            <input
+              name="organizationName"
+              type="text"
+              required
+              value={formData.organizationName}
+              onChange={handleChange}
+              placeholder="Contoh: BEM Fakultas Teknik"
+              className="w-full mt-1 px-4 py-3 border border-gray-300 rounded-xl text-sm outline-none focus:border-[#00897b]"
+            />
           </div>
 
-          <form onSubmit={handleSubmit} className="flex flex-col gap-4">
-
-            {/* Nama Organisasi */}
-            <div className="flex flex-col gap-1.5">
-              <label
-                htmlFor={fieldIds.organizationName}
-                className="[font-family:'Plus_Jakarta_Sans-Medium',Helvetica] font-medium text-sm tracking-[0] leading-5"
-              >
-                <span className="text-[#424242]">Nama Organisasi </span>
-                <span className="text-red-400">*</span>
-              </label>
-              <div className="flex bg-white rounded-xl overflow-hidden border border-solid border-[#9e9e9e] px-4 py-3">
-                <input
-                  id={fieldIds.organizationName}
-                  name="organizationName"
-                  value={formData.organizationName}
-                  onChange={handleChange}
-                  autoComplete="organization"
-                  required
-                  className="w-full [font-family:'Plus_Jakarta_Sans-Regular',Helvetica] font-normal text-[#424242] placeholder:text-gray-400 text-sm outline-none bg-transparent"
-                  placeholder="Contoh: BEM Fakultas Teknik"
-                  type="text"
-                />
-              </div>
-            </div>
-
-            {/* Jenis Organisasi */}
-        <div className="flex flex-col gap-1.5">
-            <label
-                htmlFor={fieldIds.organizationType}
-                className="[font-family:'Plus_Jakarta_Sans-Medium',Helvetica] font-medium text-sm tracking-[0] leading-5"
-            >
-                <span className="text-[#424242]">Jenis Organisasi </span>
-                <span className="text-red-400">*</span>
-            </label>
-
-            <div className="relative">
-                
-                {/* INPUT */}
-                <button
+          {/* Jenis Organisasi */}
+          <div>
+            <label className="text-sm text-[#083d56]">Jenis Organisasi <span className="text-red-500">*</span></label>
+            <div className="relative mt-1">
+              <button
                 type="button"
                 onClick={() => setIsOpen(!isOpen)}
-                className="w-full flex items-center justify-between bg-white border border-[#9e9e9e] rounded-xl px-4 py-3 text-sm text-[#424242] hover:border-[#083d56] transition"
-                >
+                className="w-full flex items-center justify-between bg-white border border-gray-300 rounded-xl px-4 py-3 text-sm text-[#424242]"
+              >
                 <span className={formData.organizationType ? "text-[#424242]" : "text-gray-400"}>
-                    {formData.organizationType || "Pilih jenis organisasi"}
+                  {formData.organizationType || "Pilih jenis organisasi"}
                 </span>
-
                 <i className={`fas fa-chevron-down text-xs transition-transform ${isOpen ? "rotate-180" : ""}`}></i>
-                </button>
-
-                {/* LIST */}
-                {isOpen && (
+              </button>
+              {isOpen && (
                 <div className="absolute z-50 mt-2 w-full bg-white border border-gray-200 rounded-xl shadow-lg overflow-hidden">
-                    {organizationTypes.map((type) => (
+                  {organizationTypes.map((type) => (
                     <div
-                        key={type}
-                        onClick={() => {
-                        setFormData((prev) => ({
-                            ...prev,
-                            organizationType: type,
-                        }));
+                      key={type}
+                      onClick={() => {
+                        setFormData((prev) => ({ ...prev, organizationType: type }));
                         setIsOpen(false);
-                        }}
-                        className="px-4 py-3 text-sm text-[#424242] hover:bg-gray-100 cursor-pointer transition"
+                      }}
+                      className="px-4 py-3 text-sm text-[#424242] hover:bg-gray-100 cursor-pointer"
                     >
-                        {type}
+                      {type}
                     </div>
-                    ))}
+                  ))}
                 </div>
-                )}
+              )}
             </div>
-            </div>
-
-            {/* Email Resmi */}
-            <div className="flex flex-col gap-1.5">
-              <label
-                htmlFor={fieldIds.officialEmail}
-                className="[font-family:'Plus_Jakarta_Sans-Medium',Helvetica] font-medium text-sm tracking-[0] leading-5"
-              >
-                <span className="text-[#424242]">Email Resmi </span>
-                <span className="text-red-400">*</span>
-              </label>
-              <div className="flex bg-white rounded-xl overflow-hidden border border-solid border-[#9e9e9e] px-4 py-3">
-                <input
-                  id={fieldIds.officialEmail}
-                  name="officialEmail"
-                  value={formData.officialEmail}
-                  onChange={handleChange}
-                  autoComplete="email"
-                  required
-                  className="w-full [font-family:'Plus_Jakarta_Sans-Regular',Helvetica] font-normal text-[#424242] placeholder:text-gray-400 text-sm outline-none bg-transparent"
-                  placeholder="humas@organisasi.com"
-                  type="email"
-                />
-              </div>
-            </div>
-
-            {/* Telepon */}
-            <div className="flex flex-col gap-1.5">
-              <label
-                htmlFor={fieldIds.phone}
-                className="[font-family:'Plus_Jakarta_Sans-Medium',Helvetica] font-medium text-sm tracking-[0] leading-5"
-              >
-                <span className="text-[#424242]">No. Telepon / WhatsApp </span>
-                <span className="text-red-400">*</span>
-              </label>
-              <div className="flex bg-white rounded-xl overflow-hidden border border-solid border-[#9e9e9e] px-4 py-3">
-                <input
-                  id={fieldIds.phone}
-                  name="phone"
-                  value={formData.phone}
-                  onChange={handleChange}
-                  autoComplete="tel"
-                  required
-                  className="w-full [font-family:'Plus_Jakarta_Sans-Regular',Helvetica] font-normal text-[#424242] placeholder:text-gray-400 text-sm outline-none bg-transparent"
-                  placeholder="08xxxxxxxxxx"
-                  type="tel"
-                />
-              </div>
-            </div>
-
-            {/* Deskripsi */}
-            <div className="flex flex-col gap-1.5">
-              <label
-                htmlFor={fieldIds.description}
-                className="[font-family:'Plus_Jakarta_Sans-Medium',Helvetica] font-medium text-[#424242] text-sm tracking-[0] leading-5"
-              >
-                Deskripsi Singkat
-              </label>
-              <div className="flex bg-white rounded-xl overflow-hidden border border-solid border-[#9e9e9e] px-4 py-3 min-h-[86px]">
-                <textarea
-                  id={fieldIds.description}
-                  name="description"
-                  value={formData.description}
-                  onChange={handleChange}
-                  className="w-full h-full resize-none [font-family:'Plus_Jakarta_Sans-Regular',Helvetica] font-normal text-[#424242] text-sm tracking-[0] leading-5 placeholder:text-gray-400 outline-none bg-transparent"
-                  placeholder="Ceritakan sedikit tentang organisasi..."
-                />
-              </div>
-            </div>
-
-            {/* Password */}
-            <div className="flex flex-col gap-1.5">
-              <label
-                htmlFor={fieldIds.password}
-                className="[font-family:'Plus_Jakarta_Sans-Medium',Helvetica] font-medium text-sm tracking-[0] leading-5"
-              >
-                <span className="text-[#424242]">Kata Sandi </span>
-                <span className="text-red-400">*</span>
-              </label>
-              <div className="flex relative items-center bg-white rounded-xl overflow-hidden border border-solid border-[#9e9e9e] px-4 py-3">
-                <input
-                  id={fieldIds.password}
-                  name="password"
-                  value={formData.password}
-                  onChange={handleChange}
-                  autoComplete="new-password"
-                  required
-                  minLength={8}
-                  className="w-full pr-8 [font-family:'Plus_Jakarta_Sans-Regular',Helvetica] font-normal text-[#424242] placeholder:text-gray-400 text-sm outline-none bg-transparent"
-                  placeholder="Minimal 8 karakter"
-                  type={showPassword ? "text" : "password"}
-                />
-                <button
-                    type="button"
-                    onClick={() => setShowPassword((prev) => !prev)}
-                    className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600"
-                  >
-                    <i className={`fas ${showPassword ? "fa-eye-slash" : "fa-eye"}`}></i>
-                </button>
-              </div>
-            </div>
-
-            {/* Konfirmasi Password */}
-            <div className="flex flex-col gap-1.5">
-              <label
-                htmlFor={fieldIds.confirmPassword}
-                className="[font-family:'Plus_Jakarta_Sans-Medium',Helvetica] font-medium text-sm tracking-[0] leading-5"
-              >
-                <span className="text-[#424242]">Konfirmasi Kata Sandi </span>
-                <span className="text-red-400">*</span>
-              </label>
-              <div className="flex relative items-center bg-white rounded-xl overflow-hidden border border-solid border-[#9e9e9e] px-4 py-3">
-                <input
-                  id={fieldIds.confirmPassword}
-                  name="confirmPassword"
-                  value={formData.confirmPassword}
-                  onChange={handleChange}
-                  autoComplete="new-password"
-                  required
-                  minLength={8}
-                  className="w-full pr-8 [font-family:'Plus_Jakarta_Sans-Regular',Helvetica] font-normal text-[#424242] placeholder:text-gray-400 text-sm outline-none bg-transparent"
-                  placeholder="Ulangi kata sandi"
-                  type={showConfirmPassword ? "text" : "password"}
-                />
-                <button
-                    type="button"
-                    onClick={() => setShowConfirmPassword((prev) => !prev)}
-                    className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600"
-                  >
-                    <i className={`fas ${showPassword ? "fa-eye-slash" : "fa-eye"}`}></i>
-                  </button>
-              </div>
-            </div>
-
-            {/* Submit Button */}
-            <button
-              type="submit"
-              className="w-full mt-2 h-12 flex items-center justify-center bg-[#00695c] rounded-xl cursor-pointer hover:bg-[#00574b] transition-colors"
-            >
-              <span className="[font-family:'Plus_Jakarta_Sans-SemiBold',Helvetica] font-semibold text-white text-base text-center tracking-[0] leading-6">
-                Daftarkan Sekarang
-              </span>
-            </button>
-          </form>
-
-          {/* Footer / Login Link */}
-          <div className="mt-8 flex flex-col items-center gap-4">
-            <span className="[font-family:'Plus_Jakarta_Sans-Regular',Helvetica] font-normal text-[#767779] text-sm text-center tracking-[0] leading-5">
-              Sudah punya akun?
-            </span>
-            <button
-                    type="button"
-                    onClick={goToLogin}
-                    className="w-full sm:w-auto sm:min-w-[200px] h-11 px-6 bg-[#083d56] rounded-xl flex items-center justify-center gap-2 hover:bg-[#062c3e] transition-colors"
-                    >
-                    <i className="fas fa-sign-in-alt text-white text-sm"></i>
-
-                    <span className="[font-family:'Plus_Jakarta_Sans-SemiBold',Helvetica] font-semibold text-white text-sm text-center tracking-[0] leading-5">
-                        Masuk di Sini
-                    </span>
-                </button>
           </div>
-        </section>
-      </section>
-    </main>
-  </>
+
+          {/* Email Resmi */}
+          <div>
+            <label className="text-sm text-[#083d56]">Email Resmi <span className="text-red-500">*</span></label>
+            <input
+              name="officialEmail"
+              type="email"
+              required
+              value={formData.officialEmail}
+              onChange={handleChange}
+              placeholder="humas@organisasi.com"
+              className="w-full mt-1 px-4 py-3 border border-gray-300 rounded-xl text-sm outline-none focus:border-[#00897b]"
+            />
+          </div>
+
+          {/* Telepon */}
+          <div>
+            <label className="text-sm text-[#083d56]">No. Telepon / WhatsApp <span className="text-red-500">*</span></label>
+            <input
+              name="phone"
+              type="tel"
+              required
+              value={formData.phone}
+              onChange={handleChange}
+              placeholder="08xxxxxxxxxx"
+              className="w-full mt-1 px-4 py-3 border border-gray-300 rounded-xl text-sm outline-none focus:border-[#00897b]"
+            />
+          </div>
+
+          {/* Deskripsi */}
+          <div>
+            <label className="text-sm text-[#083d56]">Deskripsi Singkat</label>
+            <textarea
+              name="description"
+              value={formData.description}
+              onChange={handleChange}
+              placeholder="Ceritakan sedikit tentang organisasi..."
+              className="w-full mt-1 px-4 py-3 border border-gray-300 rounded-xl text-sm outline-none focus:border-[#00897b] min-h-[80px] resize-none"
+            />
+          </div>
+
+          {/* Kata Sandi */}
+          <div>
+            <label className="text-sm text-[#083d56]">Kata Sandi <span className="text-red-500">*</span></label>
+            <div className="relative mt-1">
+              <input
+                name="password"
+                type={showPassword ? "text" : "password"}
+                required
+                value={formData.password}
+                onChange={handleChange}
+                placeholder="Masukkan password baru"
+                className={`w-full px-4 py-3 border rounded-xl text-sm outline-none transition-all pr-12 ${
+                  formData.password ? 'border-[#00695c]' : 'border-gray-300'
+                }`}
+              />
+              <button
+                type="button"
+                onClick={() => setShowPassword((prev) => !prev)}
+                className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 transition"
+              >
+                {showPassword ? (
+                  <svg width="18" height="18" fill="currentColor" viewBox="0 0 576 512">
+                    <path d="M572.52 241.4C518.29 135.59 407.4 64 288 64c-47.74 0-92.3 11.49-132.14 31.9l-25.47-19.9A16 16 0 1 0 110 96l37.28 29.13C93.17 154.66 49.71 196.61 3.48 241.4a48.35 48.35 0 0 0 0 29.2C57.71 376.41 168.6 448 288 448c47.74 0 92.3-11.49 132.14-31.9l25.47 19.9A16 16 0 0 0 466 416l-37.28-29.13c54.11-29.53 97.57-71.48 143.8-116.27a48.35 48.35 0 0 0 0-29.2zM288 400c-97 0-189.09-57.89-238.27-144a433.61 433.61 0 0 1 78.9-89.43l43.49 33.91A96 96 0 0 0 288 352a95.4 95.4 0 0 0 45.63-11.63l43.49 33.91A433.61 433.61 0 0 1 288 400zm0-144a48 48 0 0 1-48-48 47.35 47.35 0 0 1 4.42-20.1l63.68 49.6A47.66 47.66 0 0 1 288 256z"/>
+                  </svg>
+                ) : (
+                  <svg width="18" height="18" fill="currentColor" viewBox="0 0 576 512">
+                    <path d="M572.52 241.4C518.29 135.59 407.4 64 288 64S57.71 135.59 3.48 241.4a48.35 48.35 0 0 0 0 29.2C57.71 376.41 168.6 448 288 448s230.29-71.59 284.52-177.4a48.35 48.35 0 0 0 0-29.2zM288 400c-97 0-189.09-57.89-238.27-144C98.91 169.89 191 112 288 112s189.09 57.89 238.27 144C477.09 342.11 385 400 288 400zm0-240a96 96 0 1 0 96 96 96 96 0 0 0-96-96zm0 144a48 48 0 1 1 48-48 48 48 0 0 1-48 48z"/>
+                  </svg>
+                )}
+              </button>
+            </div>
+
+            {/* VISUAL STRENGTH METER */}
+            {formData.password && (
+              <div className="mt-3 flex items-center gap-2">
+                <div className="flex flex-1 gap-1.5">
+                  {[1, 2, 3, 4, 5].map((idx) => (
+                    <div
+                      key={idx}
+                      className={`h-2 flex-1 rounded-full transition-all duration-300 ${
+                        idx <= strengthLevel ? strength.color : "bg-gray-100"
+                      }`}
+                    />
+                  ))}
+                </div>
+                <span className={`text-[11px] font-bold min-w-[65px] text-right transition-colors ${strength.text}`}>
+                  {strength.label}
+                </span>
+              </div>
+            )}
+          </div>
+
+          {/* Konfirmasi Kata Sandi */}
+          <div>
+            <label className="text-sm text-[#083d56]">Konfirmasi Password <span className="text-red-500">*</span></label>
+            <div className="relative mt-1">
+              <input
+                name="confirmPassword"
+                type={showConfirmPassword ? "text" : "password"}
+                required
+                value={formData.confirmPassword}
+                onChange={handleChange}
+                placeholder="Ulangi password baru"
+                className={`w-full px-4 py-3 border rounded-xl text-sm outline-none transition-all pr-12 ${
+                  formData.confirmPassword 
+                    ? (isPasswordMatch ? 'border-green-500' : 'border-red-500') 
+                    : 'border-gray-300'
+                }`}
+              />
+              <button
+                type="button"
+                onClick={() => setShowConfirmPassword((prev) => !prev)}
+                className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 transition"
+              >
+                {showConfirmPassword ? (
+                  <svg width="18" height="18" fill="currentColor" viewBox="0 0 576 512">
+                    <path d="M572.52 241.4C518.29 135.59 407.4 64 288 64c-47.74 0-92.3 11.49-132.14 31.9l-25.47-19.9A16 16 0 1 0 110 96l37.28 29.13C93.17 154.66 49.71 196.61 3.48 241.4a48.35 48.35 0 0 0 0 29.2C57.71 376.41 168.6 448 288 448c47.74 0 92.3-11.49 132.14-31.9l25.47 19.9A16 16 0 0 0 466 416l-37.28-29.13c54.11-29.53 97.57-71.48 143.8-116.27a48.35 48.35 0 0 0 0-29.2zM288 400c-97 0-189.09-57.89-238.27-144a433.61 433.61 0 0 1 78.9-89.43l43.49 33.91A96 96 0 0 0 288 352a95.4 95.4 0 0 0 45.63-11.63l43.49 33.91A433.61 433.61 0 0 1 288 400zm0-144a48 48 0 0 1-48-48 47.35 47.35 0 0 1 4.42-20.1l63.68 49.6A47.66 47.66 0 0 1 288 256z"/>
+                  </svg>
+                ) : (
+                  <svg width="18" height="18" fill="currentColor" viewBox="0 0 576 512">
+                    <path d="M572.52 241.4C518.29 135.59 407.4 64 288 64S57.71 135.59 3.48 241.4a48.35 48.35 0 0 0 0 29.2C57.71 376.41 168.6 448 288 448s230.29-71.59 284.52-177.4a48.35 48.35 0 0 0 0-29.2zM288 400c-97 0-189.09-57.89-238.27-144C98.91 169.89 191 112 288 112s189.09 57.89 238.27 144C477.09 342.11 385 400 288 400zm0-240a96 96 0 1 0 96 96 96 96 0 0 0-96-96zm0 144a48 48 0 1 1 48-48 48 48 0 0 1-48 48z"/>
+                  </svg>
+                )}
+              </button>
+            </div>
+
+            {/* MATCH INDICATOR DENGAN SVG */}
+            {formData.confirmPassword && (
+              <div className="mt-2 flex items-center gap-1.5 text-[11px] font-medium">
+                {isPasswordMatch ? (
+                  <>
+                    <svg className="text-green-600" width="14" height="14" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth="3">
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
+                    </svg>
+                    <span className="text-green-600">Kata sandi cocok</span>
+                  </>
+                ) : (
+                  <>
+                    <svg className="text-red-500" width="12" height="12" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth="3">
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
+                    </svg>
+                    <span className="text-red-500">Kata sandi tidak cocok</span>
+                  </>
+                )}
+              </div>
+            )}
+          </div>
+
+          <button
+            type="submit"
+            disabled={!isPasswordMatch || strengthLevel < 2}
+            className="w-full py-3.5 text-white rounded-2xl font-bold text-sm transition-all"
+            style={{ 
+              backgroundColor: isPasswordMatch && strengthLevel >= 2 ? '#00695c' : '#c5c9d1',
+              cursor: isPasswordMatch && strengthLevel >= 2 ? 'pointer' : 'not-allowed'
+            }}
+          >
+            Daftarkan Sekarang
+          </button>
+        </form>
+
+        <button
+          type="button"
+          onClick={goToLogin}
+          className="mt-6 text-sm text-gray-500 flex items-center justify-center gap-2 mx-auto w-fit hover:text-[#083d56] transition-colors"
+        >
+          <i className="fas fa-arrow-left text-xs"></i>
+          <span className="[font-family:'Plus_Jakarta_Sans-SemiBold',Helvetica] font-semibold text-grey text-sm text-center tracking-[0] leading-5">Kembali ke Masuk</span>
+        </button>
+      </AuthLayout>
+    </>
   );
 };
 

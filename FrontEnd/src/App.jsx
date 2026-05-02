@@ -5,19 +5,40 @@ import LupaKataSandi from "./pages/LupaKataSandi";
 import Verifikasi from "./pages/Verifikasi";
 import BuatSandiBaru from "./pages/BuatSandiBaru";
 import Beranda from "./pages/Beranda";
+import BerhasilBuatAkun from "./pages/BerhasilBuatAkun";
 
 function App() {
   const [page, setPage] = useState("login");
+  const [verifikasiOptions, setVerifikasiOptions] = useState({ 
+    fromRegister: false,
+    email: "" 
+  });
+
+  // Navigasi ke Verifikasi dengan options
+  const goToVerifikasi = (options = {}) => {
+    setVerifikasiOptions(options);
+    setPage("verifikasi");
+  };
+
+  // Navigasi ke BerhasilBuatAkun
+  const goToBerhasilBuatAkun = () => {
+    setPage("berhasilBuatAkun");
+  };
 
   if (page === "register") {
-    return <Register goToLogin={() => setPage("login")} />;
+    return (
+      <Register
+        goToLogin={() => setPage("login")}
+        goToVerifikasi={goToVerifikasi}
+      />
+    );
   }
 
   if (page === "forgot") {
     return (
       <LupaKataSandi
         goToLogin={() => setPage("login")}
-        goToVerifikasi={() => setPage("verifikasi")}
+        goToVerifikasi={goToVerifikasi}
       />
     );
   }
@@ -27,12 +48,19 @@ function App() {
       <Verifikasi
         goToReset={() => setPage("reset")}
         goToLogin={() => setPage("login")}
+        goToBerhasilBuatAkun={goToBerhasilBuatAkun}
+        fromRegister={verifikasiOptions.fromRegister}
+        email={verifikasiOptions.email}
       />
     );
   }
 
   if (page === "reset") {
     return <BuatSandiBaru goToLogin={() => setPage("login")} />;
+  }
+
+  if (page === "berhasilBuatAkun") {
+    return <BerhasilBuatAkun goToLogin={() => setPage("login")} />;
   }
 
   if (page === "beranda") {

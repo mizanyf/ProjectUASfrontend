@@ -2,8 +2,13 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import AuthLayout from "../components/AuthLayout";
 import Toast from "../components/Toast";
 
-export const Verifikasi = ({ goToReset, goToLogin }) => {
-  const email = "bem@gmail.com";
+export const Verifikasi = ({ 
+  goToReset,      // untuk dari Lupa Password
+  goToLogin, 
+  goToBerhasilBuatAkun,  // untuk dari Register
+  fromRegister = false,   // flag untuk menentukan asal halaman
+  email = ""      // email yang dikirim dari halaman sebelumnya
+}) => {
   const codeLength = 6;
 
   const [code, setCode] = useState(Array(codeLength).fill(""));
@@ -15,7 +20,7 @@ export const Verifikasi = ({ goToReset, goToLogin }) => {
     type: "info",
   });
 
-  //   TIMER RESEND
+  // TIMER RESEND
   const [timer, setTimer] = useState(30);
 
   useEffect(() => {
@@ -37,7 +42,7 @@ export const Verifikasi = ({ goToReset, goToLogin }) => {
       type: "info",
     });
 
-    setTimer(30); // reset timer
+    setTimer(30);
   };
 
   const isComplete = useMemo(
@@ -75,13 +80,22 @@ export const Verifikasi = ({ goToReset, goToLogin }) => {
     });
 
     setTimeout(() => {
-      goToReset();
+      // Cek dari mana halaman ini diakses
+      if (fromRegister) {
+        // Jika dari Register, arahkan ke BerhasilBuatAkun
+        goToBerhasilBuatAkun();
+      } else {
+        // Jika dari Lupa Password, arahkan ke BuatSandiBaru
+        goToReset();
+      }
     }, 1500);
   };
 
+  // Format email untuk ditampilkan (maksimal 30 karakter)
+  const displayEmail = email.length > 30 ? email.substring(0, 27) + "..." : email;
+
   return (
     <>
-      {/* TOAST */}
       {toast.show && (
         <Toast
           message={toast.message}
@@ -91,18 +105,15 @@ export const Verifikasi = ({ goToReset, goToLogin }) => {
       )}
 
       <AuthLayout subtitle="Verifikasi Kode">
-
-        {/* TITLE */}
         <h1 className="text-xl font-bold text-[#083d56]">
           Masukkan Kode Verifikasi
         </h1>
 
         <p className="text-sm text-gray-500 mt-1">
-          Kode dikirim ke <b>{email}</b>
+          Kode dikirim ke <b>{displayEmail || "email Anda"}</b>
         </p>
 
         <form onSubmit={handleSubmit} className="mt-6 space-y-5">
-
           {/* OTP INPUT */}
           <div className="flex justify-between gap-2">
             {code.map((digit, index) => (
@@ -146,7 +157,6 @@ export const Verifikasi = ({ goToReset, goToLogin }) => {
           >
             Verifikasi Kode
           </button>
-
         </form>
 
         {/* BACK */}
@@ -155,10 +165,13 @@ export const Verifikasi = ({ goToReset, goToLogin }) => {
           onClick={goToLogin}
           className="mt-6 text-sm text-gray-500 flex items-center justify-center gap-2 mx-auto w-fit cursor-pointer transition-colors duration-200 hover:text-[#083d56]"
         >
-          <i className="fas fa-arrow-left text-xs"></i>
-          Kembali ke Masuk
+          <svg width="12" height="12" fill="currentColor" viewBox="0 0 448 512">
+            <path d="M9.4 233.4c-12.5 12.5-12.5 32.8 0 45.3l160 160c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L109.2 288 416 288c17.7 0 32-14.3 32-32s-14.3-32-32-32l-306.7 0L214.6 118.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0l-160 160z"/>
+          </svg>
+          <span className="[font-family:'Plus_Jakarta_Sans-SemiBold',Helvetica] font-semibold text-sm">
+            Kembali ke Masuk
+          </span>
         </button>
-
       </AuthLayout>
     </>
   );
