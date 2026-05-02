@@ -233,15 +233,43 @@ function updateAllStatCards() {
     }
 }
 function renderFilteredTable(bodyId, data) {
-    var el = document.getElementById(bodyId); if (!el) return; var html = '';
-    // UPDATED: Status logic simplified. Always 'SELESAI'.
+    var el = document.getElementById(bodyId); 
+    if (!el) return; 
+    var html = '';
+    
+    // LANGSUNG KE TBODY (Tanpa menambahkan <thead> lagi)
+    html += '<tbody>';
+    
     for (var i = 0; i < data.length; i++) {
-        var t = data[i], isM = t.type === 'pemasukan'; var docS = t.docs.length ? ' <span class="ml-1 inline-flex items-center text-[10px] text-neutral cursor-help" title="' + t.docs.join(', ') + '"><i class="fas fa-paperclip"></i>' + t.docs.length + '</span>' : '';
+        var t = data[i]; 
+        var isM = t.type === 'pemasukan'; 
+        var docS = t.docs.length ? ' <span class="ml-1 inline-flex items-center text-[10px] text-neutral cursor-help" title="' + t.docs.join(', ') + '"><i class="fas fa-paperclip"></i>' + t.docs.length + '</span>' : '';
         var stC = 'bg-tertiary-50 text-tertiary'; // Always Completed
 
-        html += '<tr class="border-t border-neutral-light/30 hover:bg-neutral-50/50 transition-colors"><td class="px-5 py-3 text-neutral whitespace-nowrap">' + formatDate(t.date) + '</td><td class="px-5 py-3 text-neutral-dark font-medium">' + t.desc + docS + '</td><td class="px-5 py-3"><span class="px-2.5 py-1 bg-neutral-50 rounded-md text-xs font-medium text-neutral-dark">' + t.cat + '</span></td><td class="px-5 py-3"><span class="inline-flex items-center gap-1.5 text-xs font-semibold ' + (isM ? 'text-tertiary' : 'text-red-500') + '"><i class="fas ' + (isM ? 'fa-arrow-down' : 'fa-arrow-up') + ' text-[10px]"></i>' + (isM ? 'Masuk' : 'Keluar') + '</span></td><td class="px-5 py-3 text-right font-display font-semibold ' + (isM ? 'text-tertiary' : 'text-red-500') + '">' + (isM ? '+' : '-') + formatRupiah(t.amount) + '</td><td class="px-5 py-3 text-center"><span class="inline-flex px-2.5 py-1 rounded-md text-[11px] font-semibold ' + stC + '">SELESAI</span></td></tr>';
+        html += '<tr class="border-t border-neutral-light/30 hover:bg-neutral-50/50 transition-colors">';
+        html += '<td class="px-5 py-3 text-neutral whitespace-nowrap">' + formatDate(t.date) + '</td>';
+        html += '<td class="px-5 py-3 text-neutral-dark font-medium">' + t.desc + docS + '</td>';
+        html += '<td class="px-5 py-3"><span class="px-2.5 py-1 bg-neutral-50 rounded-md text-xs font-medium text-neutral-dark">' + t.cat + '</span></td>';
+        html += '<td class="px-5 py-3"><span class="inline-flex items-center gap-1.5 text-xs font-semibold ' + (isM ? 'text-tertiary' : 'text-red-500') + '"><i class="fas ' + (isM ? 'fa-arrow-down' : 'fa-arrow-up') + ' text-[10px]"></i>' + (isM ? 'Masuk' : 'Keluar') + '</span></td>';
+        html += '<td class="px-5 py-3 text-right font-display font-semibold ' + (isM ? 'text-tertiary' : 'text-red-500') + '">' + (isM ? '+' : '-') + formatRupiah(t.amount) + '</td>';
+        html += '<td class="px-5 py-3 text-center"><span class="inline-flex px-2.5 py-1 rounded-md text-[11px] font-semibold ' + stC + '">SELESAI</span></td>';
+        
+        // KOLOM AKSI (Tombol Edit & Hapus)
+        html += '<td class="px-5 py-3 text-center">';
+        html += '<div class="flex items-center justify-center gap-2">';
+        html += '<button type="button" onclick="openEditTransaction(' + t.id + ')" class="text-neutral-light hover:text-primary transition-colors" title="Edit"><i class="fas fa-edit text-xs"></i></button>';
+        html += '<button type="button" onclick="deleteTransaction(' + t.id + ')" class="text-neutral-light hover:text-red-500 transition-colors" title="Hapus"><i class="fas fa-trash-alt text-xs"></i></button>';
+        html += '</div>';
+        html += '</td>';
+        
+        html += '</tr>';
     }
-    if (!data.length) html = '<tr><td colspan="6" class="px-5 py-8 text-center text-neutral text-sm">Tidak ada transaksi ditemukan</td></tr>';
+    
+    // Update colspan menjadi 7 karena ada kolom "Aksi" baru
+    if (!data.length) html = '<tr><td colspan="7" class="px-5 py-8 text-center text-neutral text-sm">Tidak ada transaksi ditemukan</td></tr>';
+    
+    html += '</tbody>';
+    
     el.innerHTML = html;
 }
 function applyFilters() {
@@ -320,7 +348,7 @@ function handleForgotStep3() { var np = document.getElementById('forgot-new-pass
 
 function showPage(p) { document.getElementById('auth-login').classList.add('hidden'); document.getElementById('auth-register').classList.add('hidden'); document.getElementById('auth-forgot').classList.add('hidden'); document.getElementById('app').classList.add('hidden'); if (p === 'login') document.getElementById('auth-login').classList.remove('hidden'); else if (p === 'register') document.getElementById('auth-register').classList.remove('hidden'); else if (p === 'forgot') { document.getElementById('auth-forgot').classList.remove('hidden'); resetForgotView(); } else { document.getElementById('app').classList.remove('hidden'); navigateTo(p === 'app' ? 'beranda' : p); } state.currentPage = p; }
 var pageTitles = { beranda: 'Beranda', transaksi: 'Transaksi', laporan: 'Laporan', anggota: 'Manajemen Anggota', pengaturan: 'Pengaturan', profil: 'Profil Organisasi' };
-function navigateTo(p) { document.querySelectorAll('[id^="page-"]').forEach(function (el) { el.classList.add('hidden'); }); var target = document.getElementById('page-' + p); if (target) { target.classList.remove('hidden'); target.classList.remove('page-enter'); void target.offsetWidth; target.classList.add('page-enter'); } document.querySelectorAll('.nav-item').forEach(function (el) { el.classList.toggle('active', el.dataset.page === p); }); document.getElementById('page-title').textContent = pageTitles[p] || 'Beranda'; if (p !== 'profil' && state.profileEditOpen) { state.profileEditOpen = false; document.getElementById('profile-edit-section').classList.add('hidden'); document.getElementById('btn-edit-profil').innerHTML = '<i class="fas fa-pen text-xs"></i> Edit Profil'; } if (p === 'beranda') initBeranda(); if (p === 'transaksi') applyFilters(); if (p === 'laporan') initLaporan(); if (p === 'anggota') renderAnggotaPage(); if (p === 'profil') updateProfilePhotoDisplay(); document.querySelector('.content-scroll').scrollTop = 0; document.getElementById('sidebar').classList.remove('open'); document.getElementById('sidebar-overlay').classList.add('hidden'); }
+function navigateTo(p)  { document.querySelectorAll('[id^="page-"]').forEach(function (el) { el.classList.add('hidden'); }); var target = document.getElementById('page-' + p); if (target) { target.classList.remove('hidden'); target.classList.remove('page-enter'); void target.offsetWidth; target.classList.add('page-enter'); } document.querySelectorAll('.nav-item').forEach(function (el) { el.classList.toggle('active', el.dataset.page === p); }); document.getElementById('page-title').textContent = pageTitles[p] || 'Beranda'; if (p !== 'profil' && state.profileEditOpen) { state.profileEditOpen = false; document.getElementById('profile-edit-section').classList.add('hidden'); document.getElementById('btn-edit-profil').innerHTML = '<i class="fas fa-pen text-xs"></i> Edit Profil'; } if (p === 'beranda') initBeranda(); if (p === 'transaksi') applyFilters(); if (p === 'laporan') initLaporan(); if (p === 'anggota') renderAnggotaPage(); if (p === 'profil') updateProfilePhotoDisplay(); document.querySelector('.content-scroll').scrollTop = 0; document.getElementById('sidebar').classList.remove('open'); document.getElementById('sidebar-overlay').classList.add('hidden'); }
 function toggleSidebar() { document.getElementById('sidebar').classList.toggle('open'); document.getElementById('sidebar-overlay').classList.toggle('hidden'); }
 
 function handleLogin() { var e = document.getElementById('login-email').value.trim(), p = document.getElementById('login-pass').value.trim(); if (!e || !p) { showToast('Harap isi email dan kata sandi', 'error'); return; } showToast('Berhasil masuk!', 'success'); setTimeout(function () { showPage('app'); }, 600); }
@@ -545,3 +573,229 @@ function exportCSV() { var result = getFiltered(), filtered = result.filtered; i
 function exportPDF() { window.print(); showToast('Dialog cetak dibuka', 'info'); }
 
 updateNotifBadge();
+// --- FITUR BARU: LOGIKA PENGATURAN PASSWORD ---
+
+// 1. Fungsi untuk ganti tampilan tab (Kata Sandi Lama vs Email)
+function togglePasswordMethod(method) {
+    var oldBtn = document.getElementById('btn-method-old');
+    var emailBtn = document.getElementById('btn-method-email');
+    var oldContainer = document.getElementById('setting-method-old');
+    var emailContainer = document.getElementById('setting-method-email');
+
+    if (method === 'old') {
+        oldBtn.classList.add('active');
+        emailBtn.classList.remove('active');
+        oldContainer.classList.remove('hidden');
+        emailContainer.classList.add('hidden');
+        
+        // Reset alur email jika user pindah tab
+        document.getElementById('setting-email-step-1').classList.remove('hidden');
+        document.getElementById('setting-email-step-2').classList.add('hidden');
+        document.getElementById('setting-email-step-3').classList.add('hidden');
+        document.getElementById('setting-email-success').classList.add('hidden');
+    } else {
+        emailBtn.classList.add('active');
+        oldBtn.classList.remove('active');
+        emailContainer.classList.remove('hidden');
+        oldContainer.classList.add('hidden');
+        
+        // Auto isi email dari profil
+        document.getElementById('setting-email-addr').value = state.profile.email;
+    }
+}
+
+// 2. Logic Email Verification Step 1 (Kirim Kode)
+function handleSettingEmailStep1() {
+    var email = document.getElementById('setting-email-addr').value.trim();
+    if (!email || !/\S+@\S+\.\S+/.test(email)) {
+        showToast('Masukkan email yang valid', 'error');
+        return;
+    }
+    state.forgotEmail = email; // Gunakan variabel yang sudah ada
+    document.getElementById('setting-email-display').textContent = email;
+    document.getElementById('setting-email-step-1').classList.add('hidden');
+    document.getElementById('setting-email-step-2').classList.remove('hidden');
+    document.getElementById('setting-email-step-2').classList.add('page-enter');
+    buildSettingOtpInputs();
+    showToast('Kode verifikasi telah dikirim', 'info');
+}
+
+// 3. Helper Build OTP Inputs (Khusus Settings agar tidak bentrok)
+function buildSettingOtpInputs() {
+    var c = document.getElementById('setting-otp-inputs');
+    var html = '';
+    for (var i = 0; i < 6; i++) {
+        html += '<input type="text" maxlength="1" class="otp-digit text-center text-xl font-bold border-2 border-neutral-light rounded-xl outline-none focus:border-tertiary transition-colors" data-idx="' + i + '" oninput="onSettingOtpInput(this)" onkeydown="onSettingOtpKeydown(event,this)" onpaste="onSettingOtpPaste(event)">';
+    }
+    c.innerHTML = html;
+    c.querySelector('.otp-digit').focus();
+}
+
+function onSettingOtpInput(el) {
+    el.value = el.value.replace(/\D/g, '');
+    if (el.value && parseInt(el.dataset.idx) < 5) {
+        var nx = document.getElementById('setting-otp-inputs').querySelector('.otp-digit[data-idx="' + (parseInt(el.dataset.idx) + 1) + '"]');
+        if (nx) nx.focus();
+    }
+}
+
+function onSettingOtpKeydown(e, el) {
+    if (e.key === 'Backspace' && !el.value && parseInt(el.dataset.idx) > 0) {
+        var pv = document.getElementById('setting-otp-inputs').querySelector('.otp-digit[data-idx="' + (parseInt(el.dataset.idx) - 1) + '"]');
+        if (pv) {
+            pv.focus();
+            pv.value = '';
+        }
+    }
+}
+
+function onSettingOtpPaste(e) {
+    e.preventDefault();
+    var data = (e.clipboardData || window.clipboardData).getData('text').replace(/\D/g, '').substring(0, 6);
+    var digits = document.getElementById('setting-otp-inputs').querySelectorAll('.otp-digit');
+    for (var i = 0; i < data.length && i < digits.length; i++) digits[i].value = data[i];
+    if (data.length > 0 && data.length < digits.length) digits[data.length].focus();
+}
+
+function getSettingOtpValue() {
+    var digits = document.getElementById('setting-otp-inputs').querySelectorAll('.otp-digit');
+    var code = '';
+    for (var i = 0; i < digits.length; i++) code += digits[i].value;
+    return code;
+}
+
+// 4. Logic Email Verification Step 2 (Verifikasi Kode)
+function handleSettingEmailStep2() {
+    var code = getSettingOtpValue();
+    if (code.length < 6) {
+        showToast('Masukkan 6 digit kode', 'error');
+        return;
+    }
+    document.getElementById('setting-email-step-2').classList.add('hidden');
+    document.getElementById('setting-email-step-3').classList.remove('hidden');
+    document.getElementById('setting-email-step-3').classList.add('page-enter');
+    document.getElementById('setting-email-new-pass').focus();
+}
+
+// 5. Helper Cek Kecocokan Password (Khusus Flow Email)
+function checkSettingEmailPassMatch() {
+    var pw = document.getElementById('setting-email-new-pass').value;
+    var cf = document.getElementById('setting-email-confirm-pass').value;
+    var el = document.getElementById('setting-email-pass-match');
+    if (!cf) {
+        el.classList.add('hidden');
+        return;
+    }
+    el.classList.remove('hidden');
+    if (pw === cf) {
+        el.className = 'text-xs px-3 py-2 rounded-lg mt-1 bg-tertiary-50 text-tertiary';
+        el.innerHTML = '<i class="fas fa-check-circle mr-1"></i>Kata sandi cocok';
+    } else {
+        el.className = 'text-xs px-3 py-2 rounded-lg mt-1 bg-red-50 text-red-500';
+        el.innerHTML = '<i class="fas fa-times-circle mr-1"></i>Kata sandi tidak cocok';
+    }
+}
+
+// 6. Logic Email Verification Step 3 (Simpan Password Baru)
+function handleSettingEmailStep3() {
+    var np = document.getElementById('setting-email-new-pass').value;
+    var cf = document.getElementById('setting-email-confirm-pass').value;
+    if (!np || np.length < 8) {
+        showToast('Kata sandi baru minimal 8 karakter', 'error');
+        return;
+    }
+    if (np !== cf) {
+        showToast('Konfirmasi kata sandi tidak cocok', 'error');
+        return;
+    }
+    if (getPasswordStrength(np) < 2) { // Gunakan fungsi getPasswordStrength yang sudah ada
+        showToast('Kata sandi terlalu lemah', 'error');
+        return;
+    }
+    
+    // Berhasil
+    document.getElementById('setting-email-step-3').classList.add('hidden');
+    document.getElementById('setting-email-success').classList.remove('hidden');
+    document.getElementById('setting-email-success').classList.add('page-enter');
+    showToast('Kata sandi berhasil diubah', 'success');
+    
+    // Bersihkan field
+    setTimeout(function() {
+        document.getElementById('setting-email-new-pass').value = '';
+        document.getElementById('setting-email-confirm-pass').value = '';
+        document.getElementById('setting-email-pass-strength').innerHTML = '';
+        document.getElementById('setting-email-pass-match').classList.add('hidden');
+    }, 2000);
+}
+// --- FITUR BARU: EDIT & HAPUS TRANSAKSI ---
+
+// Variabel untuk menyimpan ID yang sedang diedit
+var currentEditingId = null;
+
+// 1. Fungsi Membuka Modal Edit
+function openEditTransaction(id) {
+    // Cari data transaksi berdasarkan ID
+    var t = state.transactions.find(function(x) { return x.id === id; });
+    if (!t) return;
+
+    // Isi form dengan data yang ada
+    currentEditingId = id;
+    document.getElementById('edit-txn-id').value = t.id;
+    document.getElementById('edit-txn-date').value = t.date;
+    document.getElementById('edit-txn-desc').value = t.desc;
+    document.getElementById('edit-txn-type').value = t.type;
+    document.getElementById('edit-txn-cat').value = t.cat;
+    document.getElementById('edit-txn-amount').value = t.amount;
+    document.getElementById('edit-txn-note').value = t.note || ''; // Aman jika note undefined
+
+    // Buka Modal
+    openModal('modal-edit-txn');
+}
+
+// 2. Fungsi Menyimpan Edit
+function saveEditTransaction() {
+    if (!currentEditingId) return;
+
+    var date = document.getElementById('edit-txn-date').value;
+    var desc = document.getElementById('edit-txn-desc').value.trim();
+    var type = document.getElementById('edit-txn-type').value;
+    var cat = document.getElementById('edit-txn-cat').value;
+    var amount = parseInt(document.getElementById('edit-txn-amount').value);
+    var note = document.getElementById('edit-txn-note').value.trim();
+
+    if (!date) { showToast('Pilih tanggal', 'error'); return; }
+    if (!desc) { showToast('Isi deskripsi', 'error'); return; }
+    if (!amount || amount <= 0) { showToast('Masukkan jumlah yang valid', 'error'); return; }
+
+    // Cari index transaksi di array state
+    var idx = state.transactions.findIndex(function(x) { return x.id === currentEditingId; });
+    
+    if (idx !== -1) {
+        // Update data
+        state.transactions[idx].date = date;
+        state.transactions[idx].desc = desc;
+        state.transactions[idx].type = type;
+        state.transactions[idx].cat = cat;
+        state.transactions[idx].amount = amount;
+        state.transactions[idx].note = note;
+        // Status & Docs tetap sama, tidak diubah
+
+        showToast('Transaksi berhasil diperbarui', 'success');
+        closeModal('modal-edit-txn');
+        applyFilters(); // Refresh tabel dan statistik
+        currentEditingId = null;
+    } else {
+        showToast('Gagal: Transaksi tidak ditemukan', 'error');
+    }
+}
+
+// 3. Fungsi Hapus Transaksi
+function deleteTransaction(id) {
+    if (confirm('Apakah Anda yakin ingin menghapus transaksi ini?')) {
+        // Filter array untuk menghapus item dengan ID tertentu
+        state.transactions = state.transactions.filter(function(x) { return x.id !== id; });
+        
+        showToast('Transaksi berhasil dihapus', 'info');
+        applyFilters(); // Refresh tabel dan statistik
+    }
+}

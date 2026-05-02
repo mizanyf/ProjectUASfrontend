@@ -456,3 +456,12 @@ body {
         overflow: visible !important
     }
 }
+/* Tambahan CSS untuk Tab Pengaturan Password */
+#btn-method-old, #btn-method-email {
+    transition: all 0.2s;
+}
+#btn-method-old.active, #btn-method-email.active {
+    background: white;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+    font-weight: 600;
+}

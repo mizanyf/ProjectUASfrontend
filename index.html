@@ -300,7 +300,8 @@
                             class="flex items-center gap-2.5 pl-2 pr-3 py-1.5 rounded-xl hover:bg-neutral-50 transition-colors">
                             <div id="topbar-avatar"
                                 class="profile-photo-sm bg-primary flex items-center justify-center text-white text-xs font-bold">
-                                <span>BF</span></div><span id="topbar-name"
+                                <span>BF</span>
+                            </div><span id="topbar-name"
                                 class="text-sm font-medium text-neutral-dark hidden sm:block">BEM Fakultas
                                 Furap</span><i class="fas fa-chevron-down text-[10px] text-neutral"></i>
                         </button>
@@ -527,16 +528,16 @@
                         <div class="flex flex-wrap items-center gap-2 no-print" id="filter-bar-txn">
                             <span class="text-xs text-neutral font-medium mr-1"><i
                                     class="fas fa-calendar-alt mr-1"></i>Periode:</span>
-                            
+
                             <!-- TOMBOL MINGGU INI DIHAPUS SESUAI INSTRUKSI -->
-                            
+
                             <button type="button" onclick="filterTime('bulan')"
                                 class="filter-btn active-time px-3 py-2 rounded-lg text-xs font-medium bg-neutral-50 text-neutral-dark hover:bg-neutral-100 transition-colors"
                                 data-time="bulan">Bulan Ini</button>
                             <button type="button" onclick="filterTime('semua')"
                                 class="filter-btn px-3 py-2 rounded-lg text-xs font-medium bg-neutral-50 text-neutral-dark hover:bg-neutral-100 transition-colors"
                                 data-time="semua">Semua</button>
-                            
+
                             <!-- TAMBAHAN: Custom Date Range -->
                             <div class="flex items-center gap-2 border-l border-neutral-light pl-2 ml-1">
                                 <input type="date" id="filter-start-txn"
@@ -590,6 +591,10 @@
                                             <th
                                                 class="text-center px-5 py-3 font-semibold text-neutral text-xs uppercase tracking-wider">
                                                 Status</th>
+                                            <!-- TAMBAHKAN BARIS INI -->
+                                            <th
+                                                class="text-center px-5 py-3 font-semibold text-neutral text-xs uppercase tracking-wider">
+                                                Aksi</th>
                                         </tr>
                                     </thead>
                                     <tbody id="txn-table-body"></tbody>
@@ -636,16 +641,16 @@
                         <div class="flex flex-wrap items-center gap-2 no-print" id="filter-bar-lap">
                             <span class="text-xs text-neutral font-medium mr-1"><i
                                     class="fas fa-calendar-alt mr-1"></i>Periode:</span>
-                            
+
                             <!-- TOMBOL MINGGU INI DIHAPUS DI SINI -->
-                            
+
                             <button type="button" onclick="filterTime('bulan')"
                                 class="filter-btn active-time px-3 py-2 rounded-lg text-xs font-medium bg-neutral-50 text-neutral-dark hover:bg-neutral-100 transition-colors"
                                 data-time="bulan">Bulan Ini</button>
                             <button type="button" onclick="filterTime('semua')"
                                 class="filter-btn px-3 py-2 rounded-lg text-xs font-medium bg-neutral-50 text-neutral-dark hover:bg-neutral-100 transition-colors"
                                 data-time="semua">Semua</button>
-                            
+
                             <!-- TAMBAHAN: Custom Date Range -->
                             <div class="flex items-center gap-2 border-l border-neutral-light pl-2 ml-1">
                                 <input type="date" id="filter-start-lap"
@@ -668,12 +673,14 @@
                             <button type="button" onclick="filterType('pengeluaran')"
                                 class="filter-btn px-3 py-2 rounded-lg text-xs font-medium bg-neutral-50 text-neutral-dark hover:bg-neutral-100 transition-colors"
                                 data-type="pengeluaran">Pengeluaran</button>
-                            
+
                             <!-- UPDATED: Pindah Search disamping kiri tombol export -->
                             <div class="flex items-center gap-2 ml-auto no-print">
                                 <div class="relative">
-                                    <i class="fas fa-search absolute left-3 top-1/2 -translate-y-1/2 text-neutral-light text-sm"></i>
-                                    <input id="lap-txn-search" oninput="applyFilters()" type="text" placeholder="Cari..."
+                                    <i
+                                        class="fas fa-search absolute left-3 top-1/2 -translate-y-1/2 text-neutral-light text-sm"></i>
+                                    <input id="lap-txn-search" oninput="applyFilters()" type="text"
+                                        placeholder="Cari..."
                                         class="pl-9 pr-4 py-2 border border-neutral-light rounded-lg text-sm outline-none focus:border-tertiary transition-colors w-36">
                                 </div>
                                 <button type="button" onclick="exportCSV()"
@@ -697,7 +704,8 @@
                                     class="mt-5 pt-4 border-t border-neutral-light/50 flex items-center justify-between">
                                     <span class="text-xs font-semibold text-neutral uppercase tracking-wider">Total
                                         Pengeluaran</span><span class="font-display font-bold text-sm text-neutral-dark"
-                                        id="alokasi-total"></span></div>
+                                        id="alokasi-total"></span>
+                                </div>
                             </div>
                         </div>
                         <div class="bg-white rounded-2xl border border-neutral-light/30 overflow-hidden">
@@ -723,6 +731,10 @@
                                             <th
                                                 class="text-center px-5 py-3 font-semibold text-neutral text-xs uppercase tracking-wider">
                                                 Status</th>
+                                            <!-- TAMBAHKAN BARIS INI -->
+                                            <th
+                                                class="text-center px-5 py-3 font-semibold text-neutral text-xs uppercase tracking-wider">
+                                                Aksi</th>
                                         </tr>
                                     </thead>
                                     <tbody id="lap-txn-table-body"></tbody>
@@ -848,12 +860,26 @@
                         </div>
                     </div>
 
-                    <!-- PENGATURAN (UPDATED - Removed Staff Management) -->
+                    <!-- PENGATURAN (UPDATED - Added 2 Password Options) -->
                     <div id="page-pengaturan" class="page-enter space-y-6 hidden">
                         <div class="card-hover bg-white rounded-2xl p-6 border border-neutral-light/30">
                             <h3 class="font-semibold text-primary mb-5 flex items-center gap-2"><i
-                                    class="fas fa-shield-alt text-secondary"></i> Keamanan Akun</h3>
-                            <div class="space-y-4">
+                                    class="fas fa-shield-alt text-secondary"></i> Ubah Kata Sandi</h3>
+
+                            <!-- Pilihan Metode -->
+                            <div class="bg-neutral-50 p-1 rounded-xl flex mb-6">
+                                <button type="button" id="btn-method-old" onclick="togglePasswordMethod('old')"
+                                    class="flex-1 py-2 rounded-lg text-xs font-semibold text-neutral-dark transition-all shadow-sm bg-white">
+                                    <i class="fas fa-key mr-1.5"></i> Kata Sandi Lama
+                                </button>
+                                <button type="button" id="btn-method-email" onclick="togglePasswordMethod('email')"
+                                    class="flex-1 py-2 rounded-lg text-xs font-semibold text-neutral-dark transition-all hover:bg-white/50">
+                                    <i class="fas fa-envelope mr-1.5"></i> Verifikasi Email
+                                </button>
+                            </div>
+
+                            <!-- Metode 1: Kata Sandi Lama -->
+                            <div id="setting-method-old" class="space-y-4">
                                 <div><label
                                         class="block text-xs font-semibold text-neutral uppercase tracking-wider mb-1.5">Kata
                                         Sandi Lama</label>
@@ -893,20 +919,113 @@
                                     class="px-6 py-2.5 bg-primary text-white rounded-xl text-sm font-semibold hover:bg-primary-light transition-colors">Ubah
                                     Kata Sandi</button>
                             </div>
-                            <div class="border-t border-neutral-light/50 pt-5 mt-5">
-                                <h4 class="text-sm font-semibold text-neutral-dark mb-2 flex items-center gap-2"><i
-                                        class="fas fa-history text-secondary text-xs"></i> Riwayat Sesi</h4>
-                                <div
-                                    class="flex items-center gap-3 p-3 bg-tertiary-50 rounded-xl border border-tertiary/10">
-                                    <div
-                                        class="w-9 h-9 rounded-lg bg-tertiary flex items-center justify-center flex-shrink-0">
-                                        <i class="fas fa-desktop text-white text-sm"></i></div>
-                                    <div class="flex-1 min-w-0">
-                                        <p class="text-sm font-medium text-neutral-dark truncate">Chrome di Windows</p>
-                                        <p class="text-xs text-neutral">Jakarta, Indonesia</p>
-                                    </div><span
-                                        class="text-[10px] font-semibold text-tertiary bg-tertiary-50 px-2 py-1 rounded-md flex-shrink-0">Aktif</span>
+
+                            <!-- Metode 2: Verifikasi Email -->
+                            <div id="setting-method-email" class="hidden">
+
+                                <!-- Step 1: Email -->
+                                <div id="setting-email-step-1" class="space-y-4">
+                                    <p class="text-sm text-neutral mb-2">Masukkan email organisasi Anda untuk menerima
+                                        kode
+                                        verifikasi.</p>
+                                    <div><label
+                                            class="block text-xs font-semibold text-neutral uppercase tracking-wider mb-1.5">Email
+                                            Terdaftar</label><input id="setting-email-addr" type="email"
+                                            placeholder="nama@organisasi.com"
+                                            class="input-styled w-full px-4 py-2.5 border border-neutral-light rounded-xl text-sm outline-none transition-all">
+                                    </div>
+                                    <button type="button" onclick="handleSettingEmailStep1()"
+                                        class="w-full py-3 bg-primary text-white rounded-xl text-sm font-semibold hover:bg-primary-light transition-colors">Kirim
+                                        Kode Verifikasi</button>
                                 </div>
+
+                                <!-- Step 2: OTP -->
+                                <div id="setting-email-step-2" class="hidden space-y-4">
+                                    <p class="text-sm text-neutral mb-1">Kode dikirim ke <strong
+                                            id="setting-email-display" class="text-primary"></strong></p>
+                                    <p class="text-xs text-neutral mb-4">Kode berlaku 5 menit. <button type="button"
+                                            onclick="handleSettingEmailStep1()"
+                                            class="text-tertiary font-semibold hover:text-tertiary-dark">Kirim
+                                            ulang</button></p>
+                                    <div><label
+                                            class="block text-xs font-semibold text-neutral uppercase tracking-wider mb-1.5">Kode
+                                            6
+                                            Digit</label>
+                                        <div class="flex gap-2 justify-center" id="setting-otp-inputs"></div>
+                                    </div>
+                                    <button type="button" onclick="handleSettingEmailStep2()"
+                                        class="w-full py-3 bg-primary text-white rounded-xl text-sm font-semibold hover:bg-primary-light transition-colors">Verifikasi
+                                        Kode</button>
+                                    <button type="button" onclick="togglePasswordMethod('email')"
+                                        class="w-full text-xs text-neutral hover:text-neutral-dark underline">Batal</button>
+                                </div>
+
+                                <!-- Step 3: New Pass -->
+                                <div id="setting-email-step-3" class="hidden space-y-4">
+                                    <p class="text-sm text-neutral mb-2">Verifikasi berhasil. Buat kata sandi baru.</p>
+                                    <div><label
+                                            class="block text-xs font-semibold text-neutral uppercase tracking-wider mb-1.5">Kata
+                                            Sandi Baru</label>
+                                        <div class="relative"><input id="setting-email-new-pass" type="password"
+                                                placeholder="Minimal 8 karakter"
+                                                class="input-styled w-full px-4 py-2.5 border border-neutral-light rounded-xl text-sm outline-none transition-all pr-10"
+                                                oninput="renderStrengthBars('setting-email-pass-strength', getPasswordStrength(this.value))"><button
+                                                type="button" onclick="togglePass('setting-email-new-pass',this)"
+                                                class="absolute right-3 top-1/2 -translate-y-1/2 text-neutral-light hover:text-neutral"><i
+                                                    class="fas fa-eye text-sm"></i></button></div>
+                                        <div id="setting-email-pass-strength" class="mt-2 flex gap-1 items-center">
+                                        </div>
+                                    </div>
+                                    <div><label
+                                            class="block text-xs font-semibold text-neutral uppercase tracking-wider mb-1.5">Konfirmasi</label>
+                                        <div class="relative"><input id="setting-email-confirm-pass" type="password"
+                                                placeholder="Ulangi kata sandi baru"
+                                                class="input-styled w-full px-4 py-2.5 border border-neutral-light rounded-xl text-sm outline-none transition-all pr-10"
+                                                oninput="checkSettingEmailPassMatch()"><button type="button"
+                                                onclick="togglePass('setting-email-confirm-pass',this)"
+                                                class="absolute right-3 top-1/2 -translate-y-1/2 text-neutral-light hover:text-neutral"><i
+                                                    class="fas fa-eye text-sm"></i></button></div>
+                                        <div id="setting-email-pass-match"
+                                            class="hidden text-xs px-3 py-2 rounded-lg mt-1">
+                                        </div>
+                                    </div>
+                                    <button type="button" onclick="handleSettingEmailStep3()"
+                                        class="w-full py-3 bg-tertiary text-white rounded-xl text-sm font-semibold hover:bg-tertiary-light transition-colors">Simpan
+                                        Kata Sandi Baru</button>
+                                    <button type="button" onclick="togglePasswordMethod('email')"
+                                        class="w-full text-xs text-neutral hover:text-neutral-dark underline">Batal</button>
+                                </div>
+
+                                <!-- Success Message -->
+                                <div id="setting-email-success" class="hidden text-center py-6">
+                                    <div
+                                        class="w-16 h-16 rounded-full bg-tertiary-50 flex items-center justify-center mx-auto mb-4">
+                                        <i class="fas fa-check-circle text-tertiary text-3xl"></i>
+                                    </div>
+                                    <h2 class="text-lg font-bold text-primary-dark mb-2">Kata Sandi Berhasil Diubah!
+                                    </h2>
+                                    <p class="text-sm text-neutral mb-6">Silakan gunakan kata sandi baru untuk login
+                                        berikutnya.</p>
+                                    <button type="button" onclick="togglePasswordMethod('old')"
+                                        class="px-6 py-2.5 bg-primary text-white rounded-xl text-sm font-semibold hover:bg-primary-light transition-colors">Kembali</button>
+                                </div>
+
+                            </div>
+                        </div>
+                        <div class="card-hover bg-white rounded-2xl p-6 border border-neutral-light/30">
+                            <h4 class="text-sm font-semibold text-neutral-dark mb-2 flex items-center gap-2"><i
+                                    class="fas fa-history text-secondary text-xs"></i> Riwayat Sesi</h4>
+                            <div
+                                class="flex items-center gap-3 p-3 bg-tertiary-50 rounded-xl border border-tertiary/10">
+                                <div
+                                    class="w-9 h-9 rounded-lg bg-tertiary flex items-center justify-center flex-shrink-0">
+                                    <i class="fas fa-desktop text-white text-sm"></i>
+                                </div>
+                                <div class="flex-1 min-w-0">
+                                    <p class="text-sm font-medium text-neutral-dark truncate">Chrome di Windows</p>
+                                    <p class="text-xs text-neutral">Jakarta, Indonesia</p>
+                                </div><span
+                                    class="text-[10px] font-semibold text-tertiary bg-tertiary-50 px-2 py-1 rounded-md flex-shrink-0">Aktif</span>
                             </div>
                         </div>
                     </div>
@@ -980,7 +1099,8 @@
                         <div id="upload-placeholder">
                             <div
                                 class="w-12 h-12 rounded-full bg-neutral-50 flex items-center justify-center mx-auto mb-3">
-                                <i class="fas fa-cloud-upload-alt text-neutral-light text-xl"></i></div>
+                                <i class="fas fa-cloud-upload-alt text-neutral-light text-xl"></i>
+                            </div>
                             <p class="text-sm font-medium text-neutral-dark">Klik atau seret file ke sini</p>
                             <p class="text-xs text-neutral mt-1">JPG, PNG, PDF, DOC (Maks. 10MB)</p>
                         </div>
@@ -993,6 +1113,92 @@
                     class="flex-1 py-2.5 border border-neutral-light rounded-xl text-sm font-semibold text-neutral-dark hover:bg-neutral-50 transition-colors">Batal</button><button
                     type="button" onclick="addTransaction()"
                     class="flex-1 py-2.5 bg-tertiary text-white rounded-xl text-sm font-semibold hover:bg-tertiary-light transition-colors">Simpan</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL EDIT TRANSAKSI (BARU) -->
+    <div id="modal-edit-txn"
+        class="modal-backdrop fixed inset-0 bg-black/50 z-[60] hidden flex items-center justify-center p-4"
+        onclick="if(event.target===this)closeModal('modal-edit-txn')">
+        <div class="modal-content bg-white rounded-2xl shadow-2xl w-full max-w-lg max-h-[90vh] overflow-y-auto">
+            <div
+                class="flex items-center justify-between p-5 border-b border-neutral-light/50 sticky top-0 bg-white rounded-t-2xl z-10">
+                <h3 class="font-semibold text-primary text-lg">Edit Transaksi</h3><button type="button"
+                    onclick="closeModal('modal-edit-txn')"
+                    class="w-8 h-8 rounded-lg hover:bg-neutral-50 flex items-center justify-center text-neutral"><i
+                        class="fas fa-times"></i></button>
+            </div>
+            <div class="p-5 space-y-4">
+                <input type="hidden" id="edit-txn-id"> <!-- Simpan ID Transaksi -->
+                <div class="grid grid-cols-2 gap-4">
+                    <div><label
+                            class="block text-xs font-semibold text-neutral uppercase tracking-wider mb-1.5">Tanggal</label><input
+                            id="edit-txn-date" type="date"
+                            class="input-styled w-full px-4 py-2.5 border border-neutral-light rounded-xl text-sm outline-none transition-all">
+                    </div>
+                    <div><label
+                            class="block text-xs font-semibold text-neutral uppercase tracking-wider mb-1.5">Tipe</label><select
+                            id="edit-txn-type"
+                            class="input-styled w-full px-4 py-2.5 border border-neutral-light rounded-xl text-sm outline-none transition-all">
+                            <option value="pemasukan">Pemasukan</option>
+                            <option value="pengeluaran">Pengeluaran</option>
+                        </select></div>
+                </div>
+                <div><label
+                        class="block text-xs font-semibold text-neutral uppercase tracking-wider mb-1.5">Deskripsi</label><input
+                        id="edit-txn-desc" type="text" placeholder="Contoh: Pembelian ATK"
+                        class="input-styled w-full px-4 py-2.5 border border-neutral-light rounded-xl text-sm outline-none transition-all">
+                </div>
+                <div class="grid grid-cols-2 gap-4">
+                    <div><label
+                            class="block text-xs font-semibold text-neutral uppercase tracking-wider mb-1.5">Kategori</label><select
+                            id="edit-txn-cat"
+                            class="input-styled w-full px-4 py-2.5 border border-neutral-light rounded-xl text-sm outline-none transition-all">
+                            <option>Operasional</option>
+                            <option>Event</option>
+                            <option>Sponsor</option>
+                            <option>Logistik</option>
+                            <option>Kepegawaian</option>
+                            <option>Lainnya</option>
+                        </select></div>
+                    <div><label class="block text-xs font-semibold text-neutral uppercase tracking-wider mb-1.5">Jumlah
+                            (Rp)</label><input id="edit-txn-amount" type="number" placeholder="0"
+                            class="input-styled w-full px-4 py-2.5 border border-neutral-light rounded-xl text-sm outline-none transition-all">
+                    </div>
+                </div>
+                <div><label class="block text-xs font-semibold text-neutral uppercase tracking-wider mb-1.5">Catatan
+                        (Opsional)</label><textarea id="edit-txn-note" rows="2" placeholder="Catatan..."
+                        class="input-styled w-full px-4 py-2.5 border border-neutral-light rounded-xl text-sm outline-none transition-all resize-none"></textarea>
+                </div>
+                <!-- File dihilangkan untuk kesederhanaan di mode edit -->
+            </div>
+            <div class="flex gap-3 p-5 border-t border-neutral-light/50 sticky bottom-0 bg-white rounded-b-2xl"><button
+                    type="button" onclick="closeModal('modal-edit-txn')"
+                    class="flex-1 py-2.5 border border-neutral-light rounded-xl text-sm font-semibold text-neutral-dark hover:bg-neutral-50 transition-colors">Batal</button><button
+                    type="button" onclick="saveEditTransaction()"
+                    class="flex-1 py-2.5 bg-tertiary text-white rounded-xl text-sm font-semibold hover:bg-tertiary-light transition-colors">Simpan
+                    Perubahan</button>
+            </div>
+        </div>
+    </div>
+        <!-- MODAL LIHAT BUKTI TRANSAKSI (BARU) -->
+    <div id="modal-view-files"
+        class="modal-backdrop fixed inset-0 bg-black/50 z-[60] hidden flex items-center justify-center p-4"
+        onclick="if(event.target===this)closeModal('modal-view-files')">
+        <div class="modal-content bg-white rounded-2xl shadow-2xl w-full max-w-sm">
+            <div class="flex items-center justify-between p-5 border-b border-neutral-light/50">
+                <h3 class="font-semibold text-primary">Daftar Bukti Transaksi</h3><button type="button"
+                    onclick="closeModal('modal-view-files')"
+                    class="w-8 h-8 rounded-lg hover:bg-neutral-50 flex items-center justify-center text-neutral"><i
+                        class="fas fa-times"></i></button>
+            </div>
+            <div class="p-5 space-y-3" id="view-files-list">
+                <!-- List file akan muncul di sini via JS -->
+            </div>
+            <div class="p-5 pt-0">
+                <button type="button" onclick="closeModal('modal-view-files')"
+                    class="w-full py-2.5 bg-neutral-50 text-neutral-dark rounded-xl text-sm font-semibold hover:bg-neutral-100 transition-colors">Tutup</button>
             </div>
         </div>
     </div>
