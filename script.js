@@ -1,7 +1,7 @@
 // URL Logo MoneFlo Baru
 const LOGO_MONEFLO = "logoproject.jpeg";
 
-var TODAY = new Date(2024, 9, 25);
+var TODAY = new Date();
 
 // UPDATED: Logika default diubah ke 'bulan' sesuai instruksi (Awal masuk Beranda tampil bulan ini/bulan lalu)
 var state = {
@@ -12,31 +12,7 @@ var state = {
     // Set default foto profil ke Logo MoneFlo
     profile: { name: 'BEM Fakultas Furap', type: 'Kemahasiswaan', email: 'bem.furap@univ.ac.id', phone: '0812-3456-7890', photo: LOGO_MONEFLO, description: 'BEM Fakultas Furap merupakan badan eksekutif mahasiswa.' },
     // UPDATED: Status 'DIPROSES' removed from dummy data. All 'SELESAI'.
-    transactions: [
-        { id: 1, date: '2024-10-25', desc: 'Pembelian Banner Dies Natalis', cat: 'Event', type: 'pengeluaran', amount: 350000, status: 'SELESAI', docs: [] },
-        { id: 2, date: '2024-10-24', desc: 'Iuran Anggota Minggu Ini', cat: 'Operasional', type: 'pemasukan', amount: 800000, status: 'SELESAI', docs: [] },
-        { id: 3, date: '2024-10-23', desc: 'Konsumsi Rapat Koordinasi', cat: 'Operasional', type: 'pengeluaran', amount: 375000, status: 'SELESAI', docs: [] },
-        { id: 4, date: '2024-10-22', desc: 'Cetak Brosur', cat: 'Operasional', type: 'pengeluaran', amount: 420000, status: 'SELESAI', docs: [] },
-        { id: 5, date: '2024-10-21', desc: 'Sponsorship PT. Maju Jaya', cat: 'Sponsor', type: 'pemasukan', amount: 5000000, status: 'SELESAI', docs: ['invoice.pdf'] },
-        { id: 6, date: '2024-10-19', desc: 'Dana Kepegawaian', cat: 'Kepegawaian', type: 'pengeluaran', amount: 750000, status: 'SELESAI', docs: [] },
-        { id: 7, date: '2024-10-18', desc: 'Logistik & Alat Tulis', cat: 'Logistik', type: 'pengeluaran', amount: 1240000, status: 'SELESAI', docs: ['nota_atk.jpg'] },
-        { id: 8, date: '2024-10-15', desc: 'Sewa Sound System', cat: 'Event', type: 'pengeluaran', amount: 850000, status: 'SELESAI', docs: ['kwitansi.jpg'] },
-        { id: 9, date: '2024-10-14', desc: 'Dana Donatur Alumni', cat: 'Sponsor', type: 'pemasukan', amount: 1500000, status: 'SELESAI', docs: ['donasi.pdf'] },
-        { id: 10, date: '2024-10-10', desc: 'Iuran Anggota Awal Bulan', cat: 'Operasional', type: 'pemasukan', amount: 1100000, status: 'SELESAI', docs: [] },
-        { id: 11, date: '2024-09-28', desc: 'Bayar Listrik', cat: 'Operasional', type: 'pengeluaran', amount: 480000, status: 'SELESAI', docs: [] },
-        { id: 12, date: '2024-09-25', desc: 'Sponsor Kegiatan', cat: 'Sponsor', type: 'pemasukan', amount: 2500000, status: 'SELESAI', docs: [] },
-        { id: 13, date: '2024-09-22', desc: 'Sponsor Kecil', cat: 'Sponsor', type: 'pemasukan', amount: 800000, status: 'SELESAI', docs: [] },
-        { id: 14, date: '2024-09-18', desc: 'Konsumsi Rapat', cat: 'Operasional', type: 'pengeluaran', amount: 450000, status: 'SELESAI', docs: [] },
-        { id: 15, date: '2024-09-15', desc: 'ATK Mingguan', cat: 'Logistik', type: 'pengeluaran', amount: 280000, status: 'SELESAI', docs: [] },
-        { id: 16, date: '2024-09-12', desc: 'Keamanan Acara', cat: 'Event', type: 'pengeluaran', amount: 350000, status: 'SELESAI', docs: [] },
-        { id: 17, date: '2024-09-10', desc: 'Iuran Anggota', cat: 'Operasional', type: 'pemasukan', amount: 500000, status: 'SELESAI', docs: [] },
-        { id: 18, date: '2024-09-08', desc: 'Iuran Awal Bulan', cat: 'Operasional', type: 'pemasukan', amount: 600000, status: 'SELESAI', docs: [] },
-        { id: 19, date: '2024-09-05', desc: 'Kebersihan', cat: 'Operasional', type: 'pengeluaran', amount: 300000, status: 'SELESAI', docs: [] },
-        { id: 20, date: '2024-09-03', desc: 'Konsumsi', cat: 'Operasional', type: 'pengeluaran', amount: 400000, status: 'SELESAI', docs: [] },
-        { id: 21, date: '2024-09-20', desc: 'Operasional Umum', cat: 'Operasional', type: 'pengeluaran', amount: 750000, status: 'SELESAI', docs: [] },
-        { id: 22, date: '2024-09-15', desc: 'Kegiatan Sosial', cat: 'Operasional', type: 'pengeluaran', amount: 500000, status: 'SELESAI', docs: [] },
-        { id: 23, date: '2024-09-20', desc: 'Donatur Rutin', cat: 'Sponsor', type: 'pemasukan', amount: 300000, status: 'SELESAI', docs: [] }
-    ],
+    transactions: [], 
     programs: [{ name: 'Program Umum', progress: 79 }, { name: 'Pendidikan', progress: 65 }, { name: 'Kesehatan', progress: 42 }, { name: 'Sosial', progress: 88 }],
     allocations: [{ name: 'Operasional', amount: 2400000, color: '#083D56' }, { name: 'Event', amount: 1556000, color: '#00695C' }, { name: 'Logistik', amount: 520000, color: '#546E7A' }, { name: 'Kepegawaian', amount: 750000, color: '#00897B' }, { name: 'Lainnya', amount: 75000, color: '#78909C' }],
     // UPDATED: Dates changed to YYYY-MM-DD format for native date picker compatibility
@@ -116,31 +92,66 @@ function renderOrgPanel() {
 }
 
 function getFiltered() {
-    var now = new Date(TODAY), filtered = state.transactions.slice(), prevF = [];
+    var now = new Date(TODAY);
     
-    // Custom Date Filter Logic
+    // TAMBAHAN PENTING: Reset jam ke 00:00:00 agar tidak ketuker timezone
+    now.setHours(0, 0, 0, 0);
+
+    var filtered = state.transactions.slice(), prevF = [];
+    
+    // Logika Filter Custom
     if (state.currentTimeFilter === 'custom') {
         var sDate = state.customStartDate ? new Date(state.customStartDate) : null;
         var eDate = state.customEndDate ? new Date(state.customEndDate) : null;
 
         if (sDate) sDate.setHours(0, 0, 0, 0);
-        if (eDate) eDate.setHours(23, 59, 59, 999);
+        if (eDate) eDate.setHours(0, 0, 0, 0);
 
         filtered = filtered.filter(function (t) {
             var d = new Date(t.date);
+            d.setHours(0, 0, 0, 0); // Reset jam transaksi
             var valid = true;
             if (sDate && d < sDate) valid = false;
             if (eDate && d > eDate) valid = false;
             return valid;
         });
-        // Untuk custom range, kita set prevF kosong agar perhitungan % tidak error atau menampilkan data palsu
         prevF = [];
     } 
     else if (state.currentTimeFilter === 'minggu') { 
-        var wa = new Date(now); wa.setDate(wa.getDate() - 7); filtered = filtered.filter(function (t) { return new Date(t.date) >= wa; }); var pwa = new Date(wa); pwa.setDate(pwa.getDate() - 7); prevF = state.transactions.filter(function (t) { return new Date(t.date) >= pwa && new Date(t.date) < wa; }); 
+        var wa = new Date(now); wa.setDate(wa.getDate() - 7); 
+        filtered = filtered.filter(function (t) { 
+            var d = new Date(t.date);
+            d.setHours(0,0,0,0); // Reset jam transaksi
+            return d >= wa; 
+        }); 
+        var pwa = new Date(wa); pwa.setDate(pwa.getDate() - 7); 
+        prevF = state.transactions.filter(function (t) { 
+            var d = new Date(t.date);
+            d.setHours(0,0,0,0); // Reset jam transaksi
+            return d >= pwa && d < wa; 
+        }); 
     }
-    else if (state.currentTimeFilter === 'bulan') { filtered = filtered.filter(function (t) { var d = new Date(t.date); return d.getMonth() === now.getMonth() && d.getFullYear() === now.getFullYear(); }); var pm = new Date(now); pm.setMonth(pm.getMonth() - 1); prevF = state.transactions.filter(function (t) { var d = new Date(t.date); return d.getMonth() === pm.getMonth() && d.getFullYear() === pm.getFullYear(); }); }
-    else { var pm2 = new Date(now); pm2.setMonth(pm2.getMonth() - 1); prevF = state.transactions.filter(function (t) { var d = new Date(t.date); return d.getMonth() === pm2.getMonth() && d.getFullYear() === pm2.getFullYear(); }); }
+    else if (state.currentTimeFilter === 'bulan') { 
+        filtered = filtered.filter(function (t) { 
+            var d = new Date(t.date);
+            d.setHours(0, 0, 0, 0); // Reset jam transaksi
+            return d.getMonth() === now.getMonth() && d.getFullYear() === now.getFullYear(); 
+        }); 
+        var pm = new Date(now); pm.setMonth(pm.getMonth() - 1); 
+        prevF = state.transactions.filter(function (t) { 
+            var d = new Date(t.date);
+            d.setHours(0, 0, 0, 0); // Reset jam transaksi
+            return d.getMonth() === pm.getMonth() && d.getFullYear() === pm.getFullYear(); 
+        }); 
+    }
+    else { 
+        var pm2 = new Date(now); pm2.setMonth(pm2.getMonth() - 1); 
+        prevF = state.transactions.filter(function (t) { 
+            var d = new Date(t.date);
+            d.setHours(0, 0, 0, 0); // Reset jam transaksi
+            return d.getMonth() === pm2.getMonth() && d.getFullYear() === pm2.getFullYear(); 
+        }); 
+    }
     return { filtered: filtered, prevF: prevF };
 }
 
