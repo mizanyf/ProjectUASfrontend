@@ -6,21 +6,20 @@ import Verifikasi from "./pages/Verifikasi";
 import BuatSandiBaru from "./pages/BuatSandiBaru";
 import Beranda from "./pages/Beranda";
 import BerhasilBuatAkun from "./pages/BerhasilBuatAkun";
+import { AppProvider } from "./context/AppContext";
 
 function App() {
   const [page, setPage] = useState("login");
-  const [verifikasiOptions, setVerifikasiOptions] = useState({ 
+  const [verifikasiOptions, setVerifikasiOptions] = useState({
     fromRegister: false,
-    email: "" 
+    email: "",
   });
 
-  // Navigasi ke Verifikasi dengan options
   const goToVerifikasi = (options = {}) => {
     setVerifikasiOptions(options);
     setPage("verifikasi");
   };
 
-  // Navigasi ke BerhasilBuatAkun
   const goToBerhasilBuatAkun = () => {
     setPage("berhasilBuatAkun");
   };
@@ -64,7 +63,11 @@ function App() {
   }
 
   if (page === "beranda") {
-    return <Beranda />;
+    return (
+      <AppProvider>
+        <Beranda onLogout={() => setPage("login")} />
+      </AppProvider>
+    );
   }
 
   return (

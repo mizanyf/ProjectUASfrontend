@@ -1,6 +1,7 @@
-import { useState } from "react";
-import MoneFloLogo from "../assets/MoneFloLogo2.png";
+import { useState, useEffect } from "react";
+import MoneFloLogo from "../../assets/MoneFloLogo2.png";
 import { OrganizationProfile } from "./OrganizationProfile";
+import { TransactionModal } from "./TransactionModal";
 
 const navigationItems = [
   { label: "Beranda" },
@@ -37,7 +38,7 @@ const IconMember = () => (
 
 const IconSetting = () => (
   <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-    <path strokeLinecap="round" strokeLinejoin="round"strokeWidth="1.5" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
+    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.5" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.5" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
   </svg>
 );
@@ -54,10 +55,14 @@ const IconChevronRight = () => (
   </svg>
 );
 
-export const NavigationSidebarSection = ({ onNavigate, activePage = "Beranda" }) => {
+export const NavigationSidebarSection = ({ onNavigate, activePage = "Beranda", onAddTransaction, onProfileClick }) => {
   const [activeItem, setActiveItem] = useState(activePage);
   const [isOrgProfileOpen, setIsOrgProfileOpen] = useState(false);
+  const [isTransactionModalOpen, setIsTransactionModalOpen] = useState(false);
   const [isTransitioning, setIsTransitioning] = useState(false);
+
+  // Sync with parent's activePage
+  useEffect(() => { setActiveItem(activePage); }, [activePage]);
 
   const getIcon = (label) => {
     switch (label) {
@@ -75,16 +80,30 @@ export const NavigationSidebarSection = ({ onNavigate, activePage = "Beranda" })
     
     setIsTransitioning(true);
     setActiveItem(label);
+    if (onNavigate) onNavigate(label);
     
     setTimeout(() => {
       setIsTransitioning(false);
     }, 300);
   };
 
+  const handleAddTransaction = (data) => {
+    if (onAddTransaction) {
+      onAddTransaction(data);
+    }
+  };
+
   return (
     <>
       {/* Modal Profil Organisasi */}
       <OrganizationProfile isOpen={isOrgProfileOpen} onClose={() => setIsOrgProfileOpen(false)} />
+
+      {/* Modal Tambah Transaksi */}
+      <TransactionModal 
+        isOpen={isTransactionModalOpen} 
+        onClose={() => setIsTransactionModalOpen(false)}
+        onSuccess={handleAddTransaction}
+      />
 
       <aside className="fixed h-full top-0 left-0 w-64 z-20 bg-[#083d56] flex flex-col">
         {/* Logo Section */}
@@ -114,7 +133,6 @@ export const NavigationSidebarSection = ({ onNavigate, activePage = "Beranda" })
                   : "text-white/60 hover:text-white hover:bg-white/5"
               } ${isTransitioning ? "scale-98" : ""}`}
             >
-              {/* Icon dengan animasi scale saat transisi */}
               <span className={`text-white/70 ml-1 transition-transform duration-300 ${activeItem === item.label ? "scale-110" : "scale-100"}`}>
                 {getIcon(item.label)}
               </span>
@@ -123,7 +141,6 @@ export const NavigationSidebarSection = ({ onNavigate, activePage = "Beranda" })
                 {item.label}
               </span>
               
-              {/* Garis indikator dengan animasi slide-in */}
               {activeItem === item.label && (
                 <div 
                   className={`absolute left-0 top-1/2 -translate-y-1/2 w-1 h-5 bg-[#00897b] rounded-r-full transition-all duration-300 ease-out ${
@@ -137,13 +154,16 @@ export const NavigationSidebarSection = ({ onNavigate, activePage = "Beranda" })
 
         {/* Tombol Tambah Transaksi */}
         <div className="px-4 pb-3">
-          <button className="w-full py-2.5 bg-[#00695c] rounded-lg text-white text-sm font-medium hover:bg-[#005147] transition-all duration-300 flex items-center justify-center gap-2 transform hover:scale-[1.02] active:scale-95">
+          <button 
+            onClick={() => setIsTransactionModalOpen(true)}
+            className="w-full py-2.5 bg-[#00695c] rounded-lg text-white text-sm font-medium hover:bg-[#005147] transition-all duration-300 flex items-center justify-center gap-2 transform hover:scale-[1.02] active:scale-95"
+          >
             <IconPlus />
             Tambah Transaksi
           </button>
         </div>
 
-        {/* Tombol Organisasi - di BAWAH tombol Tambah Transaksi */}
+        {/* Tombol Organisasi */}
         <div className="px-4 pb-4 pt-2 border-t border-white/10">
           <button
             onClick={() => setIsOrgProfileOpen(true)}
@@ -167,7 +187,6 @@ export const NavigationSidebarSection = ({ onNavigate, activePage = "Beranda" })
         </div>
       </aside>
 
-      {/* Tambahkan keyframes CSS untuk animasi */}
       <style>{`
         @keyframes slide-in {
           0% {

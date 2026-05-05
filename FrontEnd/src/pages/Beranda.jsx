@@ -1,12 +1,7 @@
-import DashboardLayout from "../components/DashboardLayout";
-import { FinancialDashboardSection } from "../components/FinancialDashboardSection";
+import DashboardLayout from "../components/Dashboard/DashboardLayout";
 
-export const Beranda = () => {
-  return (
-    <DashboardLayout>
-      <FinancialDashboardSection />
-    </DashboardLayout>
-  );
+export const Beranda = ({ onLogout }) => {
+  return <DashboardLayout onLogout={onLogout} />;
 };
 
 export default Beranda;
