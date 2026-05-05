@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useRef, useState } from "react";
-import AuthLayout from "../components/AuthLayout";
-import Toast from "../components/Toast";
+import AuthLayout from "../components/common/AuthLayout";
+import Toast from "../components/common/Toast";
 
 export const Verifikasi = ({ 
   goToReset,      // untuk dari Lupa Password

@@ -1,4 +1,4 @@
-import logo from "../assets/MoneFloLogo.png";
+import logo from "../../assets/MoneFlologo.png";
 
 const AuthLayout = ({ children, title = "MoneFlo", subtitle = "" }) => {
   return (

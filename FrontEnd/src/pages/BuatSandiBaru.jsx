@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
-import Toast from "../components/Toast";
-import AuthLayout from "../components/AuthLayout";
+import Toast from "../components/common/Toast";
+import AuthLayout from "../components/common/AuthLayout";
 
 export const BuatSandiBaru = ({ goToLogin }) => {
   const [newPassword, setNewPassword] = useState("");

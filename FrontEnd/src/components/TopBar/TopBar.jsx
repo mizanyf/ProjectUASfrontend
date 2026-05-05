@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import Toast from "../Toast";
+import Toast from "../common/Toast";
 
 const IconMenu = () => (
   <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">

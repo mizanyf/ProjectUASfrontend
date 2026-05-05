@@ -1,6 +1,6 @@
 import { useId, useState, useEffect } from "react";
-import AuthLayout from "../components/AuthLayout";
-import Toast from "../components/Toast";
+import AuthLayout from "../components/common/AuthLayout";
+import Toast from "../components/common/Toast";
 
 export const Login = ({ onLogin, goToRegister, goToForgot }) => {
   const emailId = useId();

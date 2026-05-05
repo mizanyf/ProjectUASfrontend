@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import Toast from "../Toast";
+import Toast from "../common/Toast";
 import { useApp } from "../../context/AppContext";
 
 const IconClose = () => (
