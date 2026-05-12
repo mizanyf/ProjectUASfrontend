@@ -336,15 +336,26 @@ input[type="date"][class*="input-styled"]::-webkit-calendar-picker-indicator {
 }
 
 /* ============================================================
+<<<<<<< HEAD
    ADMIN PANEL STYLES
    ============================================================ */
 
 /* Admin layout */
+=======
+   ADMIN PANEL STYLES — same light theme as user panel
+   ============================================================ */
+
+/* Admin layout — light background matching user content area */
+>>>>>>> frontmoneflo
 .admin-layout {
   display: flex;
   height: 100vh;
   overflow: hidden;
+<<<<<<< HEAD
   background: #0A1628;
+=======
+  background: #F8FAFB;
+>>>>>>> frontmoneflo
 }
 
 .admin-main-scroll {
@@ -361,6 +372,7 @@ input[type="date"][class*="input-styled"]::-webkit-calendar-picker-indicator {
   overflow-x: hidden;
 }
 
+<<<<<<< HEAD
 /* Admin cards */
 .admin-card {
   background: rgba(30, 41, 59, 0.7);
@@ -389,17 +401,56 @@ input[type="date"][class*="input-styled"]::-webkit-calendar-picker-indicator {
 }
 
 /* Admin select */
+=======
+/* Admin cards — white cards like user cards */
+.admin-card {
+  background: #ffffff;
+  border: 1px solid rgba(176, 190, 197, 0.3);
+  border-radius: 1rem;
+}
+
+.admin-card-modal {
+  background: #ffffff;
+  border: 1px solid rgba(176, 190, 197, 0.4);
+  box-shadow: 0 25px 50px rgba(8, 61, 86, 0.12);
+}
+
+/* Admin input — same as user input-styled */
+.admin-input {
+  background: #ffffff;
+  border: 1px solid #B0BEC5;
+  color: #263238;
+  outline: none;
+  transition: all 0.2s;
+  border-radius: 0.75rem;
+  padding: 0.625rem 1rem;
+  font-size: 0.875rem;
+}
+.admin-input::placeholder { color: #90A4AE; }
+.admin-input:focus {
+  border-color: #00695C;
+  box-shadow: 0 0 0 3px rgba(0, 105, 92, 0.15);
+}
+
+/* Admin select — same style as user custom select */
+>>>>>>> frontmoneflo
 .admin-select {
   -webkit-appearance: none;
   -moz-appearance: none;
   appearance: none;
+<<<<<<< HEAD
   background-color: rgba(51, 65, 85, 0.5);
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%2394a3b8' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+=======
+  background-color: #ffffff;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%23546E7A' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+>>>>>>> frontmoneflo
   background-repeat: no-repeat;
   background-position: right 10px center;
   background-size: 14px 14px;
   padding-right: 30px !important;
   cursor: pointer;
+<<<<<<< HEAD
   color: #CBD5E1;
   outline: none;
 }
@@ -410,7 +461,66 @@ input[type="date"][class*="input-styled"]::-webkit-calendar-picker-indicator {
 .admin-select option { background: #1E293B; color: #F1F5F9; }
 
 /* Admin sidebar responsive */
+=======
+  color: #263238;
+  border: 1px solid #B0BEC5;
+  border-radius: 0.75rem;
+  outline: none;
+  font-size: 0.875rem;
+  padding-top: 0.625rem;
+  padding-bottom: 0.625rem;
+  padding-left: 1rem;
+}
+.admin-select:focus {
+  border-color: #00695C;
+  box-shadow: 0 0 0 3px rgba(0, 105, 92, 0.15);
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%2300695C' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+}
+.admin-select option { background: #ffffff; color: #263238; }
+
+/* Admin sidebar layout on mobile — shares same mechanics as user sidebar */
+>>>>>>> frontmoneflo
 @media (max-width: 1023px) {
   .admin-main-scroll { margin-left: 0; }
 }
 
+<<<<<<< HEAD
+=======
+/* ── Print Styles (Laporan PDF Export) ────────────────────────────────────── */
+.print-layout { display: none; }
+
+@media print {
+  @page { size: A4 portrait; margin: 1.4cm 1.6cm; }
+
+  /* Hide entire app */
+  body * { visibility: hidden !important; }
+
+  /* Show only the print layout */
+  .print-layout,
+  .print-layout * { visibility: visible !important; }
+
+  .print-layout {
+    display: block !important;
+    position: fixed;
+    inset: 0;
+    width: 100%;
+    height: auto;
+    background: #fff;
+    z-index: 99999;
+    padding: 0;
+  }
+
+  /* Typography */
+  .print-layout body,
+  .print-layout * {
+    font-family: 'Plus Jakarta Sans', 'Segoe UI', Arial, sans-serif;
+  }
+  .print-layout .font-display {
+    font-family: 'Space Grotesk', 'Segoe UI', Arial, sans-serif;
+  }
+
+  /* Page break helpers */
+  .print-no-break  { page-break-inside: avoid; break-inside: avoid; }
+  .print-page-break { page-break-before: always; break-before: always; }
+}
+>>>>>>> frontmoneflo

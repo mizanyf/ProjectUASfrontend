@@ -1,4 +1,8 @@
 import { useState, useRef, useEffect } from 'react';
+<<<<<<< HEAD
+=======
+import ReactDOM from 'react-dom';
+>>>>>>> frontmoneflo
 import { formatRupiah, formatDate } from '../../utils/formatters';
 
 /* ─── Inline mini date picker used in FilterBar ─────────────────────────── */
@@ -223,9 +227,119 @@ export function StatCards({ stats }) {
 }
 
 /**
+<<<<<<< HEAD
  * Shared Transaction Table Body
  */
 export function TransactionTable({ data, onEdit, onDelete }) {
+=======
+ * View-only Bukti Modal
+ */
+function BuktiViewerModal({ txn, onClose }) {
+  const [activeIdx, setActiveIdx] = useState(null);
+  if (!txn) return null;
+
+  const getName    = (d) => typeof d === 'string' ? d : d.name;
+  const getUrl     = (d) => typeof d === 'object' ? d.dataUrl : null;
+  const isImgName  = (n) => /\.(png|jpg|jpeg|gif|webp|svg)$/i.test(n);
+  const isPdfName  = (n) => /\.pdf$/i.test(n);
+
+  return ReactDOM.createPortal(
+    <div className="fixed inset-0 z-[90] flex items-center justify-center p-4">
+      <div className="absolute inset-0 bg-black/40 backdrop-blur-sm" onClick={onClose} />
+      <div className="relative bg-white rounded-2xl shadow-2xl w-full max-w-lg z-10 max-h-[90vh] flex flex-col">
+        {/* Header */}
+        <div className="flex items-center justify-between px-5 py-4 border-b border-neutral-light/30 flex-shrink-0">
+          <div className="flex items-center gap-2.5">
+            <div className="w-8 h-8 rounded-lg bg-tertiary/10 flex items-center justify-center">
+              <i className="fas fa-paperclip text-tertiary text-sm" />
+            </div>
+            <div>
+              <p className="font-semibold text-neutral-dark text-sm">Bukti Transaksi</p>
+              <p className="text-neutral text-xs">{txn.desc}</p>
+            </div>
+          </div>
+          <button type="button" onClick={onClose} className="w-8 h-8 rounded-lg bg-neutral-50 hover:bg-neutral-100 flex items-center justify-center text-neutral transition-colors">
+            <i className="fas fa-times text-sm" />
+          </button>
+        </div>
+        {/* Body */}
+        <div className="p-5 overflow-y-auto flex-1">
+          {!txn.docs?.length ? (
+            <div className="text-center py-8">
+              <div className="w-14 h-14 rounded-xl bg-neutral-50 flex items-center justify-center mx-auto mb-3">
+                <i className="fas fa-file-slash text-neutral-light text-2xl" />
+              </div>
+              <p className="text-neutral text-sm">Tidak ada bukti transaksi</p>
+            </div>
+          ) : (
+            <div className="space-y-3">
+              {txn.docs.map((doc, i) => {
+                const name   = getName(doc);
+                const url    = getUrl(doc);
+                const isImg  = isImgName(name);
+                const isPdf  = isPdfName(name);
+                const isOpen = activeIdx === i;
+                return (
+                  <div key={i} className="rounded-xl border border-neutral-light/40 overflow-hidden">
+                    {/* File row */}
+                    <div className="flex items-center gap-3 p-3 bg-neutral-50">
+                      <div className={`w-9 h-9 rounded-lg flex items-center justify-center flex-shrink-0
+                        ${isImg ? 'bg-blue-50 text-blue-400' : isPdf ? 'bg-red-50 text-red-400' : 'bg-amber-50 text-amber-400'}`}>
+                        <i className={`fas ${isImg ? 'fa-image' : isPdf ? 'fa-file-pdf' : 'fa-file-alt'} text-sm`} />
+                      </div>
+                      <div className="flex-1 min-w-0">
+                        <p className="text-neutral-dark text-sm font-medium truncate">{name}</p>
+                        <p className="text-neutral text-xs">{isImg ? 'Gambar' : isPdf ? 'Dokumen PDF' : 'Dokumen'}</p>
+                      </div>
+                      {url ? (
+                        <button type="button" onClick={() => setActiveIdx(isOpen ? null : i)}
+                          className="w-8 h-8 rounded-lg bg-white border border-neutral-light flex items-center justify-center text-primary hover:bg-primary/5 transition-colors flex-shrink-0"
+                          title={isOpen ? 'Tutup' : 'Lihat'}>
+                          <i className={`fas ${isOpen ? 'fa-eye-slash' : 'fa-eye'} text-xs`} />
+                        </button>
+                      ) : (
+                        <span className="text-[10px] text-neutral bg-white border border-neutral-light px-2 py-0.5 rounded-md flex-shrink-0">#{i + 1}</span>
+                      )}
+                    </div>
+                    {/* Preview panel */}
+                    {isOpen && url && (
+                      <div className="p-3 bg-white border-t border-neutral-light/30">
+                        {isImg ? (
+                          <img src={url} alt={name} className="max-h-64 w-full object-contain rounded-lg" />
+                        ) : (
+                          <div className="flex flex-col items-center gap-3 py-4">
+                            <i className={`fas ${isPdf ? 'fa-file-pdf text-red-400' : 'fa-file-alt text-amber-400'} text-3xl`} />
+                            <a href={url} download={name}
+                              className="inline-flex items-center gap-2 px-4 py-2 bg-primary hover:bg-primary-dark text-white rounded-lg text-xs font-semibold transition-colors">
+                              <i className="fas fa-download" /> Unduh {name}
+                            </a>
+                          </div>
+                        )}
+                      </div>
+                    )}
+                  </div>
+                );
+              })}
+            </div>
+          )}
+        </div>
+        <div className="px-5 pb-4 flex-shrink-0">
+          <p className="text-neutral text-xs text-center">{txn.docs?.length || 0} file bukti · Untuk menambah/hapus, gunakan menu Edit</p>
+        </div>
+      </div>
+    </div>,
+    document.body
+  );
+}
+
+
+/**
+ * Shared Transaction Table Body
+ */
+export function TransactionTable({ data, onEdit, onDelete, onViewProof }) {
+  const [viewBuktiTxn, setViewBuktiTxn] = useState(null);
+
+>>>>>>> frontmoneflo
   if (!data.length) {
     return (
       <tr>
@@ -233,6 +347,7 @@ export function TransactionTable({ data, onEdit, onDelete }) {
       </tr>
     );
   }
+<<<<<<< HEAD
   return data.map((t) => {
     const isM = t.type === 'pemasukan';
     return (
@@ -276,6 +391,61 @@ export function TransactionTable({ data, onEdit, onDelete }) {
   });
 }
 
+=======
+  return (
+    <>
+      {data.map((t) => {
+        const isM = t.type === 'pemasukan';
+        return (
+          <tr key={t.id} className="border-t border-neutral-light/30 hover:bg-neutral-50/50 transition-colors">
+            <td className="px-5 py-3 text-neutral whitespace-nowrap">{formatDate(t.date)}</td>
+            <td className="px-5 py-3 text-neutral-dark font-medium">
+              <span className="block">{t.desc}</span>
+              {t.docs?.length > 0 && (
+                <button type="button"
+                  onClick={() => setViewBuktiTxn(t)}
+                  className="mt-0.5 inline-flex items-center gap-1 text-[10px] text-tertiary hover:text-primary transition-colors cursor-pointer"
+                  title={`Lihat ${t.docs.length} bukti transaksi`}>
+                  <i className="fas fa-paperclip" />
+                  <span>{t.docs.length} bukti</span>
+                </button>
+              )}
+            </td>
+            <td className="px-5 py-3">
+              <span className="px-2.5 py-1 bg-neutral-50 rounded-md text-xs font-medium text-neutral-dark">{t.cat}</span>
+            </td>
+            <td className="px-5 py-3">
+              <span className={`inline-flex items-center gap-1.5 text-xs font-semibold ${isM ? 'text-tertiary' : 'text-red-500'}`}>
+                <i className={`fas ${isM ? 'fa-arrow-down' : 'fa-arrow-up'} text-[10px]`} />
+                {isM ? 'Masuk' : 'Keluar'}
+              </span>
+            </td>
+            <td className={`px-5 py-3 text-right font-display font-semibold ${isM ? 'text-tertiary' : 'text-red-500'}`}>
+              {isM ? '+' : '-'}{formatRupiah(t.amount)}
+            </td>
+            <td className="px-5 py-3 text-center">
+              <span className="inline-flex px-2.5 py-1 rounded-md text-[11px] font-semibold bg-tertiary-50 text-tertiary">SELESAI</span>
+            </td>
+            <td className="px-5 py-3 text-center">
+              <div className="flex items-center justify-center gap-2">
+                <button type="button" onClick={() => onEdit(t.id)} className="text-neutral-light hover:text-primary transition-colors" title="Edit">
+                  <i className="fas fa-edit text-xs" />
+                </button>
+                <button type="button" onClick={() => onDelete(t.id)} className="text-neutral-light hover:text-red-500 transition-colors" title="Hapus">
+                  <i className="fas fa-trash-alt text-xs" />
+                </button>
+              </div>
+            </td>
+          </tr>
+        );
+      })}
+      <BuktiViewerModal txn={viewBuktiTxn} onClose={() => setViewBuktiTxn(null)} />
+    </>
+  );
+}
+
+
+>>>>>>> frontmoneflo
 export function TableWrapper({ children }) {
   return (
     <div className="bg-white rounded-2xl border border-neutral-light/30 overflow-hidden">
@@ -283,7 +453,11 @@ export function TableWrapper({ children }) {
         <table className="w-full text-sm">
           <thead>
             <tr className="bg-neutral-50/80">
+<<<<<<< HEAD
               {['Tanggal', 'Deskripsi', 'Kategori', 'Tipe', 'Jumlah', 'Status', 'Aksi'].map((h) => (
+=======
+              {['Tanggal', 'Keterangan', 'Kategori', 'Tipe', 'Jumlah', 'Status', 'Aksi'].map((h) => (
+>>>>>>> frontmoneflo
                 <th key={h} className={`${h === 'Jumlah' ? 'text-right' : h === 'Status' || h === 'Aksi' ? 'text-center' : 'text-left'} px-5 py-3 font-semibold text-neutral text-xs uppercase tracking-wider`}>
                   {h}
                 </th>

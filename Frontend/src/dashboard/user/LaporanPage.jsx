@@ -111,7 +111,11 @@ export default function LaporanPage({ onOpenModal }) {
   }, [hasChartData, months6, maxVal]);
 
   const exportCSV = () => {
+<<<<<<< HEAD
     const rows = [['Tanggal', 'Deskripsi', 'Kategori', 'Tipe', 'Jumlah', 'Status']];
+=======
+    const rows = [['Tanggal', 'Keterangan', 'Kategori', 'Tipe', 'Jumlah', 'Status']];
+>>>>>>> frontmoneflo
     tableData.forEach(t => rows.push([t.date, t.desc, t.cat, t.type, t.amount, t.status]));
     const csv  = rows.map(r => r.join(',')).join('\n');
     const blob = new Blob([csv], { type: 'text/csv' });
@@ -120,6 +124,11 @@ export default function LaporanPage({ onOpenModal }) {
     URL.revokeObjectURL(url);
   };
 
+<<<<<<< HEAD
+=======
+  const exportPDF = () => window.print();
+
+>>>>>>> frontmoneflo
   const handleDelete = (id) => {
     if (window.confirm('Hapus transaksi ini?')) { deleteTransaction(id); showToast('Transaksi dihapus', 'info'); }
   };
@@ -144,7 +153,11 @@ export default function LaporanPage({ onOpenModal }) {
               className="flex items-center gap-1.5 px-3 py-2 bg-tertiary/10 text-tertiary rounded-lg text-xs font-medium hover:bg-tertiary/20 transition-colors">
               <i className="fas fa-file-excel" /> CSV
             </button>
+<<<<<<< HEAD
             <button type="button" onClick={() => window.print()}
+=======
+            <button type="button" onClick={exportPDF}
+>>>>>>> frontmoneflo
               className="flex items-center gap-1.5 px-3 py-2 bg-primary/10 text-primary rounded-lg text-xs font-medium hover:bg-primary/20 transition-colors">
               <i className="fas fa-file-pdf" /> PDF
             </button>
@@ -154,7 +167,11 @@ export default function LaporanPage({ onOpenModal }) {
 
       {/* Charts + Allocation */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
+<<<<<<< HEAD
         <div className="lg:col-span-2 card-hover bg-white rounded-2xl p-5 border border-neutral-light/30">
+=======
+        <div className="lg:col-span-2 bg-white rounded-2xl p-5 border border-neutral-light/30">
+>>>>>>> frontmoneflo
           <h3 className="font-semibold text-primary mb-4">Visualisasi Arus Kas</h3>
           {hasChartData ? (
             <div className="h-72"><canvas ref={chartRef} /></div>
@@ -167,7 +184,11 @@ export default function LaporanPage({ onOpenModal }) {
           )}
         </div>
 
+<<<<<<< HEAD
         <div className="card-hover bg-white rounded-2xl p-5 border border-neutral-light/30">
+=======
+        <div className="bg-white rounded-2xl p-5 border border-neutral-light/30">
+>>>>>>> frontmoneflo
           <h3 className="font-semibold text-primary mb-4">Alokasi Pengeluaran</h3>
           {allocations.length === 0 ? (
             <div className="flex flex-col items-center justify-center py-10 text-neutral">
@@ -208,8 +229,118 @@ export default function LaporanPage({ onOpenModal }) {
           data={tableData}
           onEdit={(id) => onOpenModal('editTxn', id)}
           onDelete={handleDelete}
+<<<<<<< HEAD
         />
       </TableWrapper>
+=======
+          onViewProof={(id) => onOpenModal('editTxn', id)}
+        />
+      </TableWrapper>
+
+      {/* ── Hidden Print Layout ─────────────────────────────────── */}
+      <div className="print-layout">
+        {/* Header */}
+        <div className="print-no-break" style={{ borderBottom: '3px solid #083D56', paddingBottom: 12, marginBottom: 18, display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
+            <div style={{ width: 44, height: 44, borderRadius: 10, background: '#083D56', color: '#fff', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 22, fontWeight: 800, flexShrink: 0 }}>
+              {(state.profile?.name || 'O').charAt(0).toUpperCase()}
+            </div>
+            <div>
+              <div style={{ fontSize: 16, fontWeight: 800, color: '#083D56', lineHeight: 1.1 }}>{state.profile?.name || 'Nama Organisasi'}</div>
+              <div style={{ fontSize: 9, color: '#546e7a', marginTop: 2 }}>{[state.profile?.type, state.profile?.email].filter(Boolean).join(' · ')}</div>
+            </div>
+          </div>
+          <div style={{ textAlign: 'right' }}>
+            <div style={{ fontSize: 13, fontWeight: 700, color: '#083D56' }}>Laporan Keuangan</div>
+            <div style={{ fontSize: 9, color: '#546e7a', marginTop: 3 }}>Dicetak: {new Date().toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' })}</div>
+          </div>
+        </div>
+
+        {/* Ringkasan */}
+        <div style={{ fontSize: 9, fontWeight: 700, color: '#083D56', textTransform: 'uppercase', letterSpacing: '.05em', margin: '14px 0 8px', borderLeft: '3px solid #00695C', paddingLeft: 8 }}>Ringkasan Keuangan</div>
+        <div className="print-no-break" style={{ display: 'grid', gridTemplateColumns: 'repeat(3,1fr)', gap: 10, marginBottom: 4 }}>
+          {[{ label: 'Saldo Kas', val: stats.saldo, cls: '#083D56', note: 'Total saldo akumulatif' },
+            { label: 'Total Pemasukan', val: stats.masuk, cls: '#00695C', note: `${stats.mp >= 0 ? '+' : ''}${stats.mp}% dari bulan lalu` },
+            { label: 'Total Pengeluaran', val: stats.keluar, cls: '#c62828', note: `${stats.kp >= 0 ? '+' : ''}${stats.kp}% dari bulan lalu` }]
+            .map(({ label, val, cls, note }) => (
+              <div key={label} style={{ border: '1.5px solid #e0e7ef', borderRadius: 10, padding: '10px 12px' }}>
+                <div style={{ fontSize: 7.5, fontWeight: 700, color: '#546e7a', textTransform: 'uppercase', letterSpacing: '.04em', marginBottom: 3 }}>{label}</div>
+                <div className="font-display" style={{ fontSize: 13, fontWeight: 800, color: cls }}>{formatRupiah(val)}</div>
+                <div style={{ fontSize: 7.5, color: '#546e7a', marginTop: 2 }}>{note}</div>
+              </div>
+            ))}
+        </div>
+
+        {/* Alokasi */}
+        {allocations.length > 0 && (
+          <div className="print-no-break">
+            <div style={{ fontSize: 9, fontWeight: 700, color: '#083D56', textTransform: 'uppercase', letterSpacing: '.05em', margin: '14px 0 8px', borderLeft: '3px solid #00695C', paddingLeft: 8 }}>Alokasi Pengeluaran per Kategori</div>
+            <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: 9 }}>
+              <thead><tr style={{ background: '#00695C' }}>
+                <th style={{ color: '#fff', padding: '6px 10px', textAlign: 'left', fontWeight: 600 }}>Kategori</th>
+                <th style={{ color: '#fff', padding: '6px 10px', textAlign: 'right', fontWeight: 600 }}>Jumlah</th>
+                <th style={{ color: '#fff', padding: '6px 10px', textAlign: 'right', fontWeight: 600 }}>%</th>
+              </tr></thead>
+              <tbody>
+                {allocations.map((a, i) => {
+                  const pct = totalAlloc > 0 ? Math.round(a.amount / totalAlloc * 100) : 0;
+                  return (<tr key={i} style={{ background: i % 2 === 0 ? '#fff' : '#f9fafb' }}>
+                    <td style={{ padding: '5px 10px', borderBottom: '1px solid #eceff1' }}>{a.name}</td>
+                    <td style={{ padding: '5px 10px', borderBottom: '1px solid #eceff1', textAlign: 'right' }}>{formatRupiah(a.amount)}</td>
+                    <td style={{ padding: '5px 10px', borderBottom: '1px solid #eceff1', textAlign: 'right' }}>{pct}%</td>
+                  </tr>);
+                })}
+                <tr style={{ background: '#f0f4f8', fontWeight: 700 }}>
+                  <td style={{ padding: '5px 10px', borderTop: '2px solid #083D56' }}>Total</td>
+                  <td style={{ padding: '5px 10px', borderTop: '2px solid #083D56', textAlign: 'right' }}>{formatRupiah(totalAlloc)}</td>
+                  <td style={{ padding: '5px 10px', borderTop: '2px solid #083D56', textAlign: 'right' }}>100%</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        )}
+
+        {/* Transaksi */}
+        <div style={{ fontSize: 9, fontWeight: 700, color: '#083D56', textTransform: 'uppercase', letterSpacing: '.05em', margin: '14px 0 8px', borderLeft: '3px solid #00695C', paddingLeft: 8 }}>Riwayat Transaksi ({tableData.length} transaksi)</div>
+        <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: 8.5 }}>
+          <thead><tr style={{ background: '#083D56' }}>
+            {['Tanggal', 'Keterangan', 'Kategori', 'Tipe', 'Jumlah', 'Status'].map((h) => (
+              <th key={h} style={{ color: '#fff', padding: '6px 8px', textAlign: h === 'Jumlah' ? 'right' : h === 'Status' ? 'center' : 'left', fontWeight: 600, fontSize: 8 }}>{h}</th>
+            ))}
+          </tr></thead>
+          <tbody>
+            {tableData.length === 0 && (
+              <tr><td colSpan={6} style={{ textAlign: 'center', color: '#90a4ae', padding: 16 }}>Tidak ada transaksi</td></tr>
+            )}
+            {tableData.map((t, i) => {
+              const isM = t.type === 'pemasukan';
+              const [y, m, d] = (t.date || '').split('-');
+              return (<tr key={t.id} style={{ background: i % 2 === 0 ? '#fff' : '#f9fafb' }}>
+                <td style={{ padding: '5px 8px', borderBottom: '1px solid #eceff1', whiteSpace: 'nowrap' }}>{d}/{m}/{y}</td>
+                <td style={{ padding: '5px 8px', borderBottom: '1px solid #eceff1' }}>{t.desc}</td>
+                <td style={{ padding: '5px 8px', borderBottom: '1px solid #eceff1' }}>{t.cat}</td>
+                <td style={{ padding: '5px 8px', borderBottom: '1px solid #eceff1', color: isM ? '#00695C' : '#c62828', fontWeight: 600 }}>{isM ? 'Pemasukan' : 'Pengeluaran'}</td>
+                <td style={{ padding: '5px 8px', borderBottom: '1px solid #eceff1', textAlign: 'right', color: isM ? '#00695C' : '#c62828', fontWeight: 600 }}>{isM ? '+' : '-'}{formatRupiah(t.amount)}</td>
+                <td style={{ padding: '5px 8px', borderBottom: '1px solid #eceff1', textAlign: 'center' }}><span style={{ background: '#e0f2f1', color: '#00695C', padding: '2px 7px', borderRadius: 4, fontSize: 7.5 }}>SELESAI</span></td>
+              </tr>);
+            })}
+            {tableData.length > 0 && [['Total Pemasukan', stats.masuk, '#00695C', '+'], ['Total Pengeluaran', stats.keluar, '#c62828', '-'], ['Saldo Akhir', stats.saldo, '#083D56', '']].map(([lbl, val, clr, pfx]) => (
+              <tr key={lbl} style={{ background: '#f0f4f8', fontWeight: 700 }}>
+                <td colSpan={4} style={{ padding: '5px 8px', borderTop: '2px solid #083D56' }}>{lbl}</td>
+                <td style={{ padding: '5px 8px', borderTop: '2px solid #083D56', textAlign: 'right', color: clr }}>{pfx}{formatRupiah(val)}</td>
+                <td style={{ borderTop: '2px solid #083D56' }} />
+              </tr>
+            ))}
+          </tbody>
+        </table>
+
+        {/* Footer */}
+        <div style={{ marginTop: 20, paddingTop: 8, borderTop: '1.5px solid #e0e7ef', display: 'flex', justifyContent: 'space-between', fontSize: 7.5, color: '#90a4ae' }}>
+          <span>MoneFlo — Sistem Manajemen Keuangan Organisasi</span>
+          <span>Dokumen ini dibuat otomatis · {new Date().toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' })}</span>
+        </div>
+      </div>
+>>>>>>> frontmoneflo
     </div>
   );
 }

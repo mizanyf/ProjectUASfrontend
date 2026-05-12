@@ -40,6 +40,10 @@ export default function TransaksiPage({ onOpenModal }) {
           data={tableData}
           onEdit={(id) => onOpenModal('editTxn', id)}
           onDelete={handleDelete}
+<<<<<<< HEAD
+=======
+          onViewProof={(id) => onOpenModal('editTxn', id)}
+>>>>>>> frontmoneflo
         />
       </TableWrapper>
     </div>

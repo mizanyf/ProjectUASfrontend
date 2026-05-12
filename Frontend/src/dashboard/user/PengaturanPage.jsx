@@ -159,7 +159,11 @@ export default function PengaturanPage({ onLogout }) {
   return (
     <div className="page-enter space-y-6">
       {/* Change Password Card */}
+<<<<<<< HEAD
       <div className="card-hover bg-white rounded-2xl p-6 border border-neutral-light/30">
+=======
+      <div className="bg-white rounded-2xl p-6 border border-neutral-light/30">
+>>>>>>> frontmoneflo
         <h3 className="font-semibold text-primary mb-5 flex items-center gap-2">
           <i className="fas fa-shield-alt text-secondary" /> Ubah Kata Sandi
         </h3>
@@ -319,7 +323,11 @@ export default function PengaturanPage({ onLogout }) {
       </div>
 
       {/* ── Ubah Email ─────────────────────────────────────────────────── */}
+<<<<<<< HEAD
       <div className="card-hover bg-white rounded-2xl p-6 border border-neutral-light/30">
+=======
+      <div className="bg-white rounded-2xl p-6 border border-neutral-light/30">
+>>>>>>> frontmoneflo
         <h3 className="font-semibold text-primary mb-5 flex items-center gap-2">
           <i className="fas fa-envelope text-secondary" /> Ubah Email
         </h3>
@@ -436,7 +444,11 @@ export default function PengaturanPage({ onLogout }) {
       </div>
 
       {/* Session History */}
+<<<<<<< HEAD
       <div className="card-hover bg-white rounded-2xl p-6 border border-neutral-light/30">
+=======
+      <div className="bg-white rounded-2xl p-6 border border-neutral-light/30">
+>>>>>>> frontmoneflo
         <h4 className="text-sm font-semibold text-neutral-dark mb-2 flex items-center gap-2">
           <i className="fas fa-history text-secondary text-xs" /> Riwayat Sesi
         </h4>

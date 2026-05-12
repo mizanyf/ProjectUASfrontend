@@ -4,6 +4,18 @@ import { useToast } from '../../context/ToastContext';
 import Modal from '../../components/user/Modal';
 import CustomSelect from '../../components/user/CustomSelect';
 
+<<<<<<< HEAD
+=======
+const ICON_MAP = {
+  PDF: 'fa-file-pdf text-red-400',
+  JPG: 'fa-file-image text-blue-400',
+  JPEG: 'fa-file-image text-blue-400',
+  PNG: 'fa-file-image text-emerald-400',
+  DOC: 'fa-file-word text-blue-500',
+  DOCX: 'fa-file-word text-blue-500',
+};
+
+>>>>>>> frontmoneflo
 export default function EditTransaksiModal({ isOpen, txnId, onClose }) {
   const { state, editTransaction } = useApp();
   const showToast = useToast();
@@ -24,7 +36,17 @@ export default function EditTransaksiModal({ isOpen, txnId, onClose }) {
   const [cat,    setCat]    = useState('Operasional');
   const [amount, setAmount] = useState('');
   const [note,   setNote]   = useState('');
+<<<<<<< HEAD
 
+=======
+  // Bukti transaksi
+  const [existingDocs, setExistingDocs] = useState([]); // string names from saved txn
+  const [newFiles,     setNewFiles]     = useState([]); // new File objects
+  const [isDrag,       setIsDrag]       = useState(false);
+  const [viewDoc,      setViewDoc]      = useState(null); // doc name being previewed
+
+  const fileRef       = useRef(null);
+>>>>>>> frontmoneflo
   const datePickerRef = useRef(null);
 
   useEffect(() => {
@@ -37,9 +59,19 @@ export default function EditTransaksiModal({ isOpen, txnId, onClose }) {
         setCurrentMonth(new Date(parseInt(y), parseInt(m) - 1, 1));
         setType(t.type); setDesc(t.desc); setCat(t.cat);
         setAmount(String(t.amount)); setNote(t.note || '');
+<<<<<<< HEAD
       }
     }
     if (!isOpen) setShowDatePicker(false);
+=======
+        setExistingDocs(t.docs || []);
+        setNewFiles([]);
+        setIsDrag(false);
+        setViewDoc(null);
+      }
+    }
+    if (!isOpen) { setShowDatePicker(false); setViewDoc(null); }
+>>>>>>> frontmoneflo
   }, [txnId, isOpen, state.transactions]);
 
   // Close on outside click
@@ -129,11 +161,44 @@ export default function EditTransaksiModal({ isOpen, txnId, onClose }) {
     );
   };
 
+<<<<<<< HEAD
   const handleSave = () => {
     if (!date) { showToast('Pilih tanggal', 'error'); return; }
     if (!desc.trim()) { showToast('Isi deskripsi', 'error'); return; }
     if (!amount || Number(amount) <= 0) { showToast('Masukkan jumlah yang valid', 'error'); return; }
     editTransaction(txnId, { date, type, desc: desc.trim(), cat, amount: Number(amount), note });
+=======
+  const processFiles = (incoming) => {
+    const maxSz   = 10 * 1024 * 1024;
+    const okTypes = ['image/jpeg','image/png','image/jpg','application/pdf','application/msword','application/vnd.openxmlformats-officedocument.wordprocessingml.document'];
+    Array.from(incoming).forEach((f) => {
+      if (!okTypes.includes(f.type)) { showToast(`Format "${f.name}" tidak didukung`, 'error'); return; }
+      if (f.size > maxSz)            { showToast(`"${f.name}" melebihi 10MB`, 'error');          return; }
+      setNewFiles((prev) => {
+        if (prev.some((x) => x.name === f.name && x.size === f.size)) return prev;
+        const reader = new FileReader();
+        reader.onload = (e) =>
+          setNewFiles((p) => p.some((x) => x.name === f.name && x.size === f.size) ? p
+            : [...p, { name: f.name, type: f.type, size: f.size, dataUrl: e.target.result }]);
+        reader.readAsDataURL(f);
+        return prev;
+      });
+    });
+  };
+
+  const removeExistingDoc = (idx) => setExistingDocs((p) => p.filter((_, i) => i !== idx));
+  const removeNewFile     = (idx) => setNewFiles((p) => p.filter((_, i) => i !== idx));
+
+  const handleSave = () => {
+    if (!date)                          { showToast('Pilih tanggal', 'error');             return; }
+    if (!desc.trim())                   { showToast('Isi deskripsi', 'error');             return; }
+    if (!amount || Number(amount) <= 0) { showToast('Masukkan jumlah yang valid', 'error'); return; }
+    const docs = [
+      ...existingDocs,
+      ...newFiles.map(({ name, type: t, dataUrl }) => ({ name, type: t, dataUrl })),
+    ];
+    editTransaction(txnId, { date, type, desc: desc.trim(), cat, amount: Number(amount), note, docs });
+>>>>>>> frontmoneflo
     showToast('Transaksi berhasil diperbarui', 'success');
     onClose();
   };
@@ -208,6 +273,109 @@ export default function EditTransaksiModal({ isOpen, txnId, onClose }) {
           <textarea rows={2} placeholder="Catatan..." value={note} onChange={(e) => setNote(e.target.value)}
             className="input-styled w-full px-4 py-2.5 border border-neutral-light rounded-xl text-sm outline-none transition-all resize-none" />
         </div>
+<<<<<<< HEAD
+=======
+
+        {/* ── Bukti Transaksi ────────────────────────────────────── */}
+        <div>
+          <label className="block text-xs font-semibold text-neutral uppercase tracking-wider mb-1.5">Bukti Transaksi</label>
+
+          {/* Existing docs */}
+          {existingDocs.length > 0 && (
+            <div className="space-y-2 mb-2">
+              {existingDocs.map((doc, i) => {
+                const name = typeof doc === 'string' ? doc : doc.name;
+                const ext  = name.split('.').pop().toUpperCase();
+                const ic   = ICON_MAP[ext] || 'fa-file text-neutral-light';
+                return (
+                  <div key={i} className="flex items-center gap-3 p-3 bg-tertiary/5 border border-tertiary/20 rounded-xl">
+                    <div className="w-9 h-9 rounded-lg bg-white flex items-center justify-center flex-shrink-0 shadow-sm">
+                      <i className={`fas ${ic}`} />
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      <p className="text-sm font-medium text-neutral-dark truncate">{name}</p>
+                      <p className="text-[11px] text-tertiary">Tersimpan</p>
+                    </div>
+                    <button type="button" onClick={() => setViewDoc(viewDoc === doc ? null : doc)}
+                      title="Lihat" className="w-8 h-8 rounded-lg hover:bg-primary/10 flex items-center justify-center text-primary transition-colors flex-shrink-0">
+                      <i className={`fas ${viewDoc === doc ? 'fa-eye-slash' : 'fa-eye'} text-sm`} />
+                    </button>
+                    <button type="button" onClick={() => removeExistingDoc(i)}
+                      title="Hapus" className="w-8 h-8 rounded-lg hover:bg-red-50 flex items-center justify-center text-neutral-light hover:text-red-500 transition-colors flex-shrink-0">
+                      <i className="fas fa-times text-sm" />
+                    </button>
+                  </div>
+                );
+              })}
+            </div>
+          )}
+
+          {/* Preview placeholder when eye clicked */}
+          {viewDoc && (() => {
+            const docName   = typeof viewDoc === 'string' ? viewDoc : viewDoc.name;
+            const docUrl    = typeof viewDoc === 'object' ? viewDoc.dataUrl : null;
+            const isImg     = /\.(png|jpg|jpeg|gif|webp)$/i.test(docName);
+            return (
+              <div className="mb-2 p-3 bg-neutral-50 border border-neutral-light/50 rounded-xl">
+                <p className="text-xs font-semibold text-neutral mb-2">{docName}</p>
+                {docUrl && isImg ? (
+                  <img src={docUrl} alt={docName} className="max-h-56 w-full object-contain rounded-lg" />
+                ) : docUrl ? (
+                  <a href={docUrl} download={docName}
+                    className="inline-flex items-center gap-2 px-4 py-2 bg-primary text-white rounded-lg text-xs font-semibold hover:bg-primary-dark transition-colors">
+                    <i className="fas fa-download" /> Unduh {docName}
+                  </a>
+                ) : (
+                  <p className="text-[11px] text-neutral">Pratinjau tidak tersedia. Hapus dan unggah ulang untuk memperbarui.</p>
+                )}
+              </div>
+            );
+          })()}
+
+          {/* New files list */}
+          {newFiles.length > 0 && (
+            <div className="space-y-2 mb-2">
+              {newFiles.map((f, i) => {
+                const ext = f.name.split('.').pop().toUpperCase();
+                const sz  = f.size < 1048576 ? (f.size/1024).toFixed(1)+' KB' : (f.size/1048576).toFixed(1)+' MB';
+                const ic  = ICON_MAP[ext] || 'fa-file text-neutral-light';
+                return (
+                  <div key={i} className="flex items-center gap-3 p-3 bg-neutral-50 rounded-xl">
+                    <div className="w-9 h-9 rounded-lg bg-white flex items-center justify-center flex-shrink-0 shadow-sm">
+                      <i className={`fas ${ic}`} />
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      <p className="text-sm font-medium text-neutral-dark truncate">{f.name}</p>
+                      <p className="text-[11px] text-neutral">{sz} · Baru</p>
+                    </div>
+                    <button type="button" onClick={() => removeNewFile(i)}
+                      className="w-8 h-8 rounded-lg hover:bg-red-50 flex items-center justify-center text-neutral-light hover:text-red-500 transition-colors flex-shrink-0">
+                      <i className="fas fa-times text-sm" />
+                    </button>
+                  </div>
+                );
+              })}
+            </div>
+          )}
+
+          {/* Upload zone */}
+          <div
+            className={`upload-zone p-4 text-center cursor-pointer ${isDrag ? 'drag-over' : ''}`}
+            onClick={() => fileRef.current?.click()}
+            onDragOver={(e) => { e.preventDefault(); setIsDrag(true); }}
+            onDragLeave={() => setIsDrag(false)}
+            onDrop={(e) => { e.preventDefault(); setIsDrag(false); processFiles(e.dataTransfer.files); }}
+          >
+            <input ref={fileRef} type="file" className="hidden" accept=".jpg,.jpeg,.png,.pdf,.doc,.docx"
+              multiple onChange={(e) => processFiles(e.target.files)} />
+            <div className="flex flex-col items-center gap-1">
+              <i className="fas fa-cloud-upload-alt text-neutral-light text-xl mb-1" />
+              <p className="text-xs font-medium text-neutral-dark">Klik atau seret untuk menambah bukti</p>
+              <p className="text-[11px] text-neutral">JPG, PNG, PDF, DOC (Maks. 10MB)</p>
+            </div>
+          </div>
+        </div>
+>>>>>>> frontmoneflo
       </div>
 
       <div className="flex gap-3 p-5 border-t border-neutral-light/50 sticky bottom-0 bg-white rounded-b-2xl">

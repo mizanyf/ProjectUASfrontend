@@ -54,7 +54,11 @@ export default function AnggotaPage({ onNavigate }) {
   return (
     <div className="page-enter space-y-6">
       {/* Dues Settings */}
+<<<<<<< HEAD
       <div className="card-hover bg-white rounded-2xl p-6 border border-neutral-light/30">
+=======
+      <div className="bg-white rounded-2xl p-6 border border-neutral-light/30">
+>>>>>>> frontmoneflo
         <h3 className="font-semibold text-primary mb-4 flex items-center gap-2">
           <i className="fas fa-cogs text-secondary" /> Pengaturan Iuran Kas
         </h3>
@@ -78,7 +82,11 @@ export default function AnggotaPage({ onNavigate }) {
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {/* Add Member Form */}
+<<<<<<< HEAD
         <div className="card-hover bg-white rounded-2xl p-6 border border-neutral-light/30">
+=======
+        <div className="bg-white rounded-2xl p-6 border border-neutral-light/30">
+>>>>>>> frontmoneflo
           <h3 className="font-semibold text-primary mb-4 flex items-center gap-2">
             <i className="fas fa-user-plus text-tertiary" /> Tambah Anggota
           </h3>
@@ -102,7 +110,11 @@ export default function AnggotaPage({ onNavigate }) {
         </div>
 
         {/* Member List */}
+<<<<<<< HEAD
         <div className="lg:col-span-2 card-hover bg-white rounded-2xl p-6 border border-neutral-light/30">
+=======
+        <div className="lg:col-span-2 bg-white rounded-2xl p-6 border border-neutral-light/30">
+>>>>>>> frontmoneflo
           <div className="flex items-center justify-between mb-4">
             <h3 className="font-semibold text-primary">Daftar Anggota</h3>
             <div className="flex items-center gap-2">

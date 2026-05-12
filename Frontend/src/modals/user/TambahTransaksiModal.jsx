@@ -198,6 +198,7 @@ export default function TambahTransaksiModal({ isOpen, onClose }) {
   };
 
   const processFiles = (incoming) => {
+<<<<<<< HEAD
     const maxSz = 10 * 1024 * 1024;
     const okTypes = ['image/jpeg', 'image/png', 'image/jpg', 'application/pdf', 'application/msword', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'];
     const next = [...files];
@@ -207,15 +208,40 @@ export default function TambahTransaksiModal({ isOpen, onClose }) {
       if (!next.some((x) => x.name === f.name && x.size === f.size)) next.push(f);
     });
     setFiles(next);
+=======
+    const maxSz   = 10 * 1024 * 1024;
+    const okTypes = ['image/jpeg','image/png','image/jpg','application/pdf','application/msword','application/vnd.openxmlformats-officedocument.wordprocessingml.document'];
+    Array.from(incoming).forEach((f) => {
+      if (!okTypes.includes(f.type)) { showToast(`Format "${f.name}" tidak didukung`, 'error'); return; }
+      if (f.size > maxSz)            { showToast(`"${f.name}" melebihi 10MB`, 'error');          return; }
+      setFiles((prev) => {
+        if (prev.some((x) => x.name === f.name && x.size === f.size)) return prev;
+        const reader = new FileReader();
+        reader.onload = (e) =>
+          setFiles((p) => p.some((x) => x.name === f.name && x.size === f.size) ? p
+            : [...p, { name: f.name, type: f.type, size: f.size, dataUrl: e.target.result }]);
+        reader.readAsDataURL(f);
+        return prev; // unchanged until reader fires
+      });
+    });
+>>>>>>> frontmoneflo
   };
 
   const removeFile = (i) => setFiles((prev) => prev.filter((_, idx) => idx !== i));
 
   const handleSave = () => {
+<<<<<<< HEAD
     if (!date) { showToast('Pilih tanggal', 'error'); return; }
     if (!desc.trim()) { showToast('Isi Keterangan', 'error'); return; }
     if (!amount || Number(amount) <= 0) { showToast('Masukkan jumlah yang valid', 'error'); return; }
     addTransaction({ date, type, desc: desc.trim(), cat, amount: Number(amount), note, docs: files.map((f) => f.name) });
+=======
+    if (!date)                        { showToast('Pilih tanggal', 'error');             return; }
+    if (!desc.trim())                 { showToast('Isi Keterangan', 'error');            return; }
+    if (!amount || Number(amount) <= 0) { showToast('Masukkan jumlah yang valid', 'error'); return; }
+    addTransaction({ date, type, desc: desc.trim(), cat, amount: Number(amount), note,
+      docs: files.map(({ name, type: t, dataUrl }) => ({ name, type: t, dataUrl })) });
+>>>>>>> frontmoneflo
     showToast('Transaksi berhasil ditambahkan', 'success');
     onClose();
   };

@@ -89,7 +89,11 @@ export default function ProfilPage({ onLogout }) {
 
       {/* Edit Form */}
       {editing && (
+<<<<<<< HEAD
         <div className="card-hover bg-white rounded-2xl p-6 border border-neutral-light/30 page-enter">
+=======
+        <div className="bg-white rounded-2xl p-6 border border-neutral-light/30 page-enter">
+>>>>>>> frontmoneflo
           <h3 className="font-semibold text-primary mb-5 flex items-center gap-2">
             <i className="fas fa-edit text-tertiary" /> Edit Data Organisasi
           </h3>
@@ -149,7 +153,11 @@ export default function ProfilPage({ onLogout }) {
       )}
 
       {/* Security Card */}
+<<<<<<< HEAD
       <div className="card-hover bg-white rounded-2xl p-6 border border-neutral-light/30">
+=======
+      <div className="bg-white rounded-2xl p-6 border border-neutral-light/30">
+>>>>>>> frontmoneflo
         <h3 className="font-semibold text-primary mb-5 flex items-center gap-2">
           <i className="fas fa-shield-alt text-tertiary" /> Keamanan Akun
         </h3>
