@@ -4,8 +4,6 @@ import { useToast } from '../../context/ToastContext';
 import Modal from '../../components/user/Modal';
 import CustomSelect from '../../components/user/CustomSelect';
 
-<<<<<<< HEAD
-=======
 const ICON_MAP = {
   PDF: 'fa-file-pdf text-red-400',
   JPG: 'fa-file-image text-blue-400',
@@ -15,7 +13,6 @@ const ICON_MAP = {
   DOCX: 'fa-file-word text-blue-500',
 };
 
->>>>>>> frontmoneflo
 export default function EditTransaksiModal({ isOpen, txnId, onClose }) {
   const { state, editTransaction } = useApp();
   const showToast = useToast();
@@ -36,9 +33,6 @@ export default function EditTransaksiModal({ isOpen, txnId, onClose }) {
   const [cat,    setCat]    = useState('Operasional');
   const [amount, setAmount] = useState('');
   const [note,   setNote]   = useState('');
-<<<<<<< HEAD
-
-=======
   // Bukti transaksi
   const [existingDocs, setExistingDocs] = useState([]); // string names from saved txn
   const [newFiles,     setNewFiles]     = useState([]); // new File objects
@@ -46,7 +40,6 @@ export default function EditTransaksiModal({ isOpen, txnId, onClose }) {
   const [viewDoc,      setViewDoc]      = useState(null); // doc name being previewed
 
   const fileRef       = useRef(null);
->>>>>>> frontmoneflo
   const datePickerRef = useRef(null);
 
   useEffect(() => {
@@ -59,11 +52,6 @@ export default function EditTransaksiModal({ isOpen, txnId, onClose }) {
         setCurrentMonth(new Date(parseInt(y), parseInt(m) - 1, 1));
         setType(t.type); setDesc(t.desc); setCat(t.cat);
         setAmount(String(t.amount)); setNote(t.note || '');
-<<<<<<< HEAD
-      }
-    }
-    if (!isOpen) setShowDatePicker(false);
-=======
         setExistingDocs(t.docs || []);
         setNewFiles([]);
         setIsDrag(false);
@@ -71,7 +59,6 @@ export default function EditTransaksiModal({ isOpen, txnId, onClose }) {
       }
     }
     if (!isOpen) { setShowDatePicker(false); setViewDoc(null); }
->>>>>>> frontmoneflo
   }, [txnId, isOpen, state.transactions]);
 
   // Close on outside click
@@ -161,13 +148,6 @@ export default function EditTransaksiModal({ isOpen, txnId, onClose }) {
     );
   };
 
-<<<<<<< HEAD
-  const handleSave = () => {
-    if (!date) { showToast('Pilih tanggal', 'error'); return; }
-    if (!desc.trim()) { showToast('Isi deskripsi', 'error'); return; }
-    if (!amount || Number(amount) <= 0) { showToast('Masukkan jumlah yang valid', 'error'); return; }
-    editTransaction(txnId, { date, type, desc: desc.trim(), cat, amount: Number(amount), note });
-=======
   const processFiles = (incoming) => {
     const maxSz   = 10 * 1024 * 1024;
     const okTypes = ['image/jpeg','image/png','image/jpg','application/pdf','application/msword','application/vnd.openxmlformats-officedocument.wordprocessingml.document'];
@@ -198,7 +178,6 @@ export default function EditTransaksiModal({ isOpen, txnId, onClose }) {
       ...newFiles.map(({ name, type: t, dataUrl }) => ({ name, type: t, dataUrl })),
     ];
     editTransaction(txnId, { date, type, desc: desc.trim(), cat, amount: Number(amount), note, docs });
->>>>>>> frontmoneflo
     showToast('Transaksi berhasil diperbarui', 'success');
     onClose();
   };
@@ -273,8 +252,6 @@ export default function EditTransaksiModal({ isOpen, txnId, onClose }) {
           <textarea rows={2} placeholder="Catatan..." value={note} onChange={(e) => setNote(e.target.value)}
             className="input-styled w-full px-4 py-2.5 border border-neutral-light rounded-xl text-sm outline-none transition-all resize-none" />
         </div>
-<<<<<<< HEAD
-=======
 
         {/* ── Bukti Transaksi ────────────────────────────────────── */}
         <div>
@@ -375,7 +352,6 @@ export default function EditTransaksiModal({ isOpen, txnId, onClose }) {
             </div>
           </div>
         </div>
->>>>>>> frontmoneflo
       </div>
 
       <div className="flex gap-3 p-5 border-t border-neutral-light/50 sticky bottom-0 bg-white rounded-b-2xl">

@@ -111,11 +111,7 @@ export default function LaporanPage({ onOpenModal }) {
   }, [hasChartData, months6, maxVal]);
 
   const exportCSV = () => {
-<<<<<<< HEAD
-    const rows = [['Tanggal', 'Deskripsi', 'Kategori', 'Tipe', 'Jumlah', 'Status']];
-=======
     const rows = [['Tanggal', 'Keterangan', 'Kategori', 'Tipe', 'Jumlah', 'Status']];
->>>>>>> frontmoneflo
     tableData.forEach(t => rows.push([t.date, t.desc, t.cat, t.type, t.amount, t.status]));
     const csv  = rows.map(r => r.join(',')).join('\n');
     const blob = new Blob([csv], { type: 'text/csv' });
@@ -124,11 +120,8 @@ export default function LaporanPage({ onOpenModal }) {
     URL.revokeObjectURL(url);
   };
 
-<<<<<<< HEAD
-=======
   const exportPDF = () => window.print();
 
->>>>>>> frontmoneflo
   const handleDelete = (id) => {
     if (window.confirm('Hapus transaksi ini?')) { deleteTransaction(id); showToast('Transaksi dihapus', 'info'); }
   };
@@ -153,11 +146,7 @@ export default function LaporanPage({ onOpenModal }) {
               className="flex items-center gap-1.5 px-3 py-2 bg-tertiary/10 text-tertiary rounded-lg text-xs font-medium hover:bg-tertiary/20 transition-colors">
               <i className="fas fa-file-excel" /> CSV
             </button>
-<<<<<<< HEAD
-            <button type="button" onClick={() => window.print()}
-=======
             <button type="button" onClick={exportPDF}
->>>>>>> frontmoneflo
               className="flex items-center gap-1.5 px-3 py-2 bg-primary/10 text-primary rounded-lg text-xs font-medium hover:bg-primary/20 transition-colors">
               <i className="fas fa-file-pdf" /> PDF
             </button>
@@ -167,11 +156,7 @@ export default function LaporanPage({ onOpenModal }) {
 
       {/* Charts + Allocation */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
-<<<<<<< HEAD
-        <div className="lg:col-span-2 card-hover bg-white rounded-2xl p-5 border border-neutral-light/30">
-=======
         <div className="lg:col-span-2 bg-white rounded-2xl p-5 border border-neutral-light/30">
->>>>>>> frontmoneflo
           <h3 className="font-semibold text-primary mb-4">Visualisasi Arus Kas</h3>
           {hasChartData ? (
             <div className="h-72"><canvas ref={chartRef} /></div>
@@ -184,11 +169,7 @@ export default function LaporanPage({ onOpenModal }) {
           )}
         </div>
 
-<<<<<<< HEAD
-        <div className="card-hover bg-white rounded-2xl p-5 border border-neutral-light/30">
-=======
         <div className="bg-white rounded-2xl p-5 border border-neutral-light/30">
->>>>>>> frontmoneflo
           <h3 className="font-semibold text-primary mb-4">Alokasi Pengeluaran</h3>
           {allocations.length === 0 ? (
             <div className="flex flex-col items-center justify-center py-10 text-neutral">
@@ -229,10 +210,6 @@ export default function LaporanPage({ onOpenModal }) {
           data={tableData}
           onEdit={(id) => onOpenModal('editTxn', id)}
           onDelete={handleDelete}
-<<<<<<< HEAD
-        />
-      </TableWrapper>
-=======
           onViewProof={(id) => onOpenModal('editTxn', id)}
         />
       </TableWrapper>
@@ -340,7 +317,6 @@ export default function LaporanPage({ onOpenModal }) {
           <span>Dokumen ini dibuat otomatis · {new Date().toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' })}</span>
         </div>
       </div>
->>>>>>> frontmoneflo
     </div>
   );
 }

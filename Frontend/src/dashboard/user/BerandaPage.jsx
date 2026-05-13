@@ -100,11 +100,7 @@ export default function BerandaPage({ onOpenModal, onNavigate }) {
 
       {/* Charts Row */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
-<<<<<<< HEAD
-        <div className="lg:col-span-2 card-hover bg-white rounded-2xl p-5 border border-neutral-light/30">
-=======
         <div className="lg:col-span-2 bg-white rounded-2xl p-5 border border-neutral-light/30">
->>>>>>> frontmoneflo
           <h3 className="font-semibold text-primary mb-4 text-sm">Pemasukan &amp; Pengeluaran 6 Bulan Terakhir</h3>
           {hasChartData ? (
             <div className="h-64"><canvas ref={chartRef} /></div>
@@ -118,11 +114,7 @@ export default function BerandaPage({ onOpenModal, onNavigate }) {
         </div>
 
         {/* Realisasi Anggaran */}
-<<<<<<< HEAD
-        <div className="card-hover bg-white rounded-2xl p-5 border border-neutral-light/30">
-=======
         <div className="bg-white rounded-2xl p-5 border border-neutral-light/30">
->>>>>>> frontmoneflo
           <div className="flex items-center justify-between mb-4">
             <h3 className="font-semibold text-primary text-sm">Realisasi Anggaran</h3>
             <button type="button" onClick={() => onOpenModal('editReal')}
@@ -161,11 +153,7 @@ export default function BerandaPage({ onOpenModal, onNavigate }) {
 
       {/* Recent Transactions + Agenda */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
-<<<<<<< HEAD
-        <div className="lg:col-span-2 card-hover bg-white rounded-2xl p-5 border border-neutral-light/30">
-=======
         <div className="lg:col-span-2 bg-white rounded-2xl p-5 border border-neutral-light/30">
->>>>>>> frontmoneflo
           <div className="flex items-center justify-between mb-4">
             <h3 className="font-semibold text-primary text-sm">Transaksi Terakhir</h3>
             <button type="button" onClick={() => onNavigate('transaksi')}
@@ -199,11 +187,7 @@ export default function BerandaPage({ onOpenModal, onNavigate }) {
         </div>
 
         {/* Agenda */}
-<<<<<<< HEAD
-        <div className="card-hover bg-white rounded-2xl p-5 border border-neutral-light/30">
-=======
         <div className="bg-white rounded-2xl p-5 border border-neutral-light/30">
->>>>>>> frontmoneflo
           <div className="flex items-center justify-between mb-4">
             <h3 className="font-semibold text-primary text-sm">Agenda Pembayaran</h3>
             <button type="button" onClick={() => onOpenModal('agenda')}

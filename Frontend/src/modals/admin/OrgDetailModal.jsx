@@ -1,15 +1,9 @@
 const fmt = (n) => new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', maximumFractionDigits: 0 }).format(n);
 
 const STATUS_STYLE = {
-<<<<<<< HEAD
-  'Aktif':     'bg-emerald-500/15 text-emerald-400 border-emerald-500/30',
-  'Pending':   'bg-amber-500/15 text-amber-400 border-amber-500/30',
-  'Non-aktif': 'bg-slate-600/30 text-slate-400 border-slate-600/50',
-=======
   'Aktif':     'bg-tertiary/10 text-tertiary border-tertiary/30',
   'Pending':   'bg-amber-50 text-amber-600 border-amber-200',
   'Non-aktif': 'bg-neutral-50 text-neutral border-neutral-light',
->>>>>>> frontmoneflo
 };
 
 export default function OrgDetailModal({ isOpen, org, onClose, onEdit, onDelete }) {
@@ -18,24 +12,11 @@ export default function OrgDetailModal({ isOpen, org, onClose, onEdit, onDelete 
 
   return (
     <div className="fixed inset-0 z-[80] flex items-center justify-center p-4">
-<<<<<<< HEAD
-      <div className="absolute inset-0 bg-black/70 backdrop-blur-sm" onClick={onClose} />
-=======
       <div className="absolute inset-0 bg-black/40 backdrop-blur-sm" onClick={onClose} />
->>>>>>> frontmoneflo
       <div className="admin-card-modal relative w-full max-w-md rounded-2xl p-6 z-10">
         {/* Header */}
         <div className="flex items-start justify-between mb-5">
           <div className="flex items-center gap-4">
-<<<<<<< HEAD
-            <div className="w-14 h-14 rounded-2xl flex items-center justify-center text-white text-xl font-bold flex-shrink-0"
-              style={{ backgroundColor: org.color + '30', border: `2px solid ${org.color}60`, color: org.color }}>
-              {initials}
-            </div>
-            <div className="min-w-0">
-              <h3 className="text-white font-display font-bold text-lg leading-tight">{org.name}</h3>
-              <p className="text-slate-400 text-sm mt-0.5">{org.type}</p>
-=======
             <div className="w-14 h-14 rounded-2xl flex items-center justify-center text-xl font-bold flex-shrink-0"
               style={{ backgroundColor: org.color + '22', border: `2px solid ${org.color}50`, color: org.color }}>
               {initials}
@@ -43,33 +24,19 @@ export default function OrgDetailModal({ isOpen, org, onClose, onEdit, onDelete 
             <div className="min-w-0">
               <h3 className="text-primary-dark font-display font-bold text-lg leading-tight">{org.name}</h3>
               <p className="text-neutral text-sm mt-0.5">{org.type}</p>
->>>>>>> frontmoneflo
               <span className={`inline-block mt-1.5 text-[11px] font-semibold px-2.5 py-0.5 rounded-full border ${STATUS_STYLE[org.status] || ''}`}>
                 {org.status}
               </span>
             </div>
           </div>
-<<<<<<< HEAD
-          <button type="button" onClick={onClose} className="w-8 h-8 rounded-lg bg-slate-700/50 flex items-center justify-center text-slate-400 hover:text-white transition-colors flex-shrink-0">
-=======
           <button type="button" onClick={onClose}
             className="w-8 h-8 rounded-lg bg-neutral-50 flex items-center justify-center text-neutral hover:text-neutral-dark transition-colors flex-shrink-0">
->>>>>>> frontmoneflo
             <i className="fas fa-times text-sm" />
           </button>
         </div>
 
         {/* Stats */}
         <div className="grid grid-cols-2 gap-3 mb-5">
-<<<<<<< HEAD
-          <div className="p-3 bg-slate-800/60 rounded-xl border border-white/5">
-            <p className="text-slate-500 text-xs">Total Anggota</p>
-            <p className="text-white font-display font-bold text-xl mt-0.5">{org.memberCount}</p>
-          </div>
-          <div className="p-3 bg-slate-800/60 rounded-xl border border-white/5">
-            <p className="text-slate-500 text-xs">Saldo Organisasi</p>
-            <p className="text-white font-display font-bold text-base mt-0.5 truncate">{fmt(org.balance)}</p>
-=======
           <div className="p-3 bg-primary/5 rounded-xl border border-primary/10">
             <p className="text-neutral text-xs">Total Anggota</p>
             <p className="text-primary-dark font-display font-bold text-xl mt-0.5">{org.memberCount}</p>
@@ -77,25 +44,10 @@ export default function OrgDetailModal({ isOpen, org, onClose, onEdit, onDelete 
           <div className="p-3 bg-tertiary/5 rounded-xl border border-tertiary/10">
             <p className="text-neutral text-xs">Saldo Organisasi</p>
             <p className="text-tertiary font-display font-bold text-base mt-0.5 truncate">{fmt(org.balance)}</p>
->>>>>>> frontmoneflo
           </div>
         </div>
 
         {/* Info */}
-<<<<<<< HEAD
-        <div className="space-y-3 mb-5">
-          <div className="flex items-center gap-3 p-3 bg-slate-800/40 rounded-xl">
-            <i className="fas fa-envelope text-slate-500 w-4 text-center" />
-            <p className="text-slate-300 text-sm truncate">{org.email}</p>
-          </div>
-          <div className="flex items-center gap-3 p-3 bg-slate-800/40 rounded-xl">
-            <i className="fas fa-phone text-slate-500 w-4 text-center" />
-            <p className="text-slate-300 text-sm">{org.phone}</p>
-          </div>
-          <div className="flex items-center gap-3 p-3 bg-slate-800/40 rounded-xl">
-            <i className="fas fa-calendar text-slate-500 w-4 text-center" />
-            <p className="text-slate-300 text-sm">Terdaftar: {org.createdAt}</p>
-=======
         <div className="space-y-2.5 mb-5">
           <div className="flex items-center gap-3 p-3 bg-neutral-50 rounded-xl">
             <i className="fas fa-envelope text-neutral-light w-4 text-center" />
@@ -108,33 +60,17 @@ export default function OrgDetailModal({ isOpen, org, onClose, onEdit, onDelete 
           <div className="flex items-center gap-3 p-3 bg-neutral-50 rounded-xl">
             <i className="fas fa-calendar text-neutral-light w-4 text-center" />
             <p className="text-neutral-dark text-sm">Terdaftar: {org.createdAt}</p>
->>>>>>> frontmoneflo
           </div>
         </div>
 
         {org.description && (
-<<<<<<< HEAD
-          <div className="p-3 bg-slate-800/40 rounded-xl mb-5">
-            <p className="text-slate-500 text-xs mb-1">Deskripsi</p>
-            <p className="text-slate-300 text-sm leading-relaxed">{org.description}</p>
-=======
           <div className="p-3 bg-neutral-50 rounded-xl mb-5">
             <p className="text-neutral text-xs mb-1">Deskripsi</p>
             <p className="text-neutral-dark text-sm leading-relaxed">{org.description}</p>
->>>>>>> frontmoneflo
           </div>
         )}
 
         {/* Actions */}
-<<<<<<< HEAD
-        <div className="flex gap-3 pt-4 border-t border-white/5">
-          <button type="button" onClick={() => onDelete(org)}
-            className="flex items-center gap-2 px-4 py-2.5 rounded-xl border border-red-500/30 text-red-400 hover:bg-red-500/10 text-sm font-semibold transition-all">
-            <i className="fas fa-trash-alt text-xs" /> Hapus
-          </button>
-          <button type="button" onClick={() => onEdit(org)}
-            className="flex-1 flex items-center justify-center gap-2 py-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white text-sm font-semibold transition-all hover:shadow-lg hover:shadow-indigo-500/25">
-=======
         <div className="flex gap-3 pt-4 border-t border-neutral-light/30">
           <button type="button" onClick={() => onDelete(org)}
             className="flex items-center gap-2 px-4 py-2.5 rounded-xl border border-red-200 text-red-500 hover:bg-red-50 text-sm font-semibold transition-all">
@@ -142,7 +78,6 @@ export default function OrgDetailModal({ isOpen, org, onClose, onEdit, onDelete 
           </button>
           <button type="button" onClick={() => onEdit(org)}
             className="flex-1 flex items-center justify-center gap-2 py-2.5 rounded-xl bg-primary hover:bg-primary-dark text-white text-sm font-semibold transition-all hover:shadow-lg hover:shadow-primary/20">
->>>>>>> frontmoneflo
             <i className="fas fa-pen text-xs" /> Edit Organisasi
           </button>
         </div>

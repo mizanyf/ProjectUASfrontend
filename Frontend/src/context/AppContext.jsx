@@ -17,6 +17,8 @@ const initialState = {
   agendas: [],
   members: [],
   duesSettings: { interval: 30, amount: 10000 },
+  // periodStart: tanggal dimulainya periode iuran saat ini (ISO string YYYY-MM-DD)
+  duesPeriodStart: null,
   notifications: [],
   nextAgendaId: 1,
   nextTxnId:    1,
@@ -84,7 +86,7 @@ export function AppProvider({ children }) {
   const addMember = useCallback((member) => {
     setState((s) => ({
       ...s,
-      members: [...s.members, { ...member, id: s.nextMemberId }],
+      members: [...s.members, { ...member, id: s.nextMemberId, isPaid: false, lastPaidDate: null }],
       nextMemberId: s.nextMemberId + 1,
     }));
   }, []);
@@ -92,12 +94,26 @@ export function AppProvider({ children }) {
   const toggleMemberPayment = useCallback((id) => {
     setState((s) => ({
       ...s,
-      members: s.members.map((m) => (m.id === id ? { ...m, isPaid: !m.isPaid } : m)),
+      members: s.members.map((m) => {
+        if (m.id !== id) return m;
+        // Jika sudah dicatat iurannya di periode ini, tidak bisa diubah
+        const status = getMemberPeriodStatus(m, s.duesSettings, s.duesPeriodStart);
+        if (status === 'recorded') return m;
+        return { ...m, isPaid: !m.isPaid };
+      }),
     }));
   }, []);
 
   const toggleAllPayments = useCallback((status) => {
-    setState((s) => ({ ...s, members: s.members.map((m) => ({ ...m, isPaid: status })) }));
+    setState((s) => ({
+      ...s,
+      members: s.members.map((m) => {
+        const periodStatus = getMemberPeriodStatus(m, s.duesSettings, s.duesPeriodStart);
+        // Jangan ubah anggota yang sudah dicatat iurannya di periode ini
+        if (periodStatus === 'recorded') return m;
+        return { ...m, isPaid: status };
+      }),
+    }));
   }, []);
 
   const deleteMember = useCallback((id) => {
@@ -110,7 +126,7 @@ export function AppProvider({ children }) {
 
   const recordAllDues = useCallback(() => {
     setState((s) => {
-      const today = TODAY.toISOString().split('T')[0];
+      const today = new Date().toISOString().split('T')[0];
       const days = s.duesSettings.interval;
       const amount = s.duesSettings.amount;
       const paidMembers = s.members.filter((m) => m.isPaid);
@@ -126,7 +142,23 @@ export function AppProvider({ children }) {
         status: 'SELESAI',
         docs: [],
       }));
-      return { ...s, transactions: [...s.transactions, ...newTxns], nextTxnId: nextId };
+
+      // Tentukan period start: jika belum ada, gunakan hari ini
+      const newPeriodStart = s.duesPeriodStart || today;
+
+      return {
+        ...s,
+        transactions: [...s.transactions, ...newTxns],
+        nextTxnId: nextId,
+        // Tandai anggota yang sudah dicatat: simpan lastPaidDate & reset isPaid
+        members: s.members.map((m) =>
+          m.isPaid
+            ? { ...m, isPaid: false, lastPaidDate: today }
+            : m
+        ),
+        // Simpan tanggal mulai periode (atau tetap dari sebelumnya jika sudah ada)
+        duesPeriodStart: newPeriodStart,
+      };
     });
   }, []);
 
@@ -165,4 +197,45 @@ export function AppProvider({ children }) {
 
 export function useApp() {
   return useContext(AppContext);
+}
+
+/**
+ * Menentukan status pembayaran iuran anggota terhadap periode saat ini.
+ * @param {object} member - data anggota
+ * @param {object} duesSettings - { interval: number (hari), amount: number }
+ * @param {string|null} duesPeriodStart - tanggal mulai periode (YYYY-MM-DD) atau null
+ * @returns {'recorded'|'overdue'|'pending'}
+ *   - 'recorded' : sudah dibayar di periode ini → abu-abu, tidak bisa dicentang
+ *   - 'overdue'  : periode telah lewat tapi belum bayar → merah
+ *   - 'pending'  : belum bayar, masih dalam periode → normal
+ */
+export function getMemberPeriodStatus(member, duesSettings, duesPeriodStart) {
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+
+  if (!duesPeriodStart) {
+    // Belum ada periode dimulai sama sekali → semua pending
+    return 'pending';
+  }
+
+  const periodStart = new Date(duesPeriodStart);
+  periodStart.setHours(0, 0, 0, 0);
+  const periodEnd = new Date(periodStart);
+  periodEnd.setDate(periodEnd.getDate() + duesSettings.interval - 1);
+
+  // Cek apakah sudah membayar di periode ini
+  if (member.lastPaidDate) {
+    const paid = new Date(member.lastPaidDate);
+    paid.setHours(0, 0, 0, 0);
+    if (paid >= periodStart && paid <= periodEnd) {
+      return 'recorded';
+    }
+  }
+
+  // Jika periode sudah lewat dan belum bayar
+  if (today > periodEnd) {
+    return 'overdue';
+  }
+
+  return 'pending';
 }

@@ -336,26 +336,15 @@ input[type="date"][class*="input-styled"]::-webkit-calendar-picker-indicator {
 }
 
 /* ============================================================
-<<<<<<< HEAD
-   ADMIN PANEL STYLES
-   ============================================================ */
-
-/* Admin layout */
-=======
    ADMIN PANEL STYLES — same light theme as user panel
    ============================================================ */
 
 /* Admin layout — light background matching user content area */
->>>>>>> frontmoneflo
 .admin-layout {
   display: flex;
   height: 100vh;
   overflow: hidden;
-<<<<<<< HEAD
-  background: #0A1628;
-=======
   background: #F8FAFB;
->>>>>>> frontmoneflo
 }
 
 .admin-main-scroll {
@@ -372,36 +361,6 @@ input[type="date"][class*="input-styled"]::-webkit-calendar-picker-indicator {
   overflow-x: hidden;
 }
 
-<<<<<<< HEAD
-/* Admin cards */
-.admin-card {
-  background: rgba(30, 41, 59, 0.7);
-  border: 1px solid rgba(255, 255, 255, 0.06);
-  backdrop-filter: blur(12px);
-}
-
-.admin-card-modal {
-  background: #1E293B;
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  box-shadow: 0 25px 50px rgba(0, 0, 0, 0.5);
-}
-
-/* Admin input */
-.admin-input {
-  background: rgba(30, 41, 59, 0.6);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  color: #F1F5F9;
-  outline: none;
-  transition: all 0.2s;
-}
-.admin-input::placeholder { color: #64748B; }
-.admin-input:focus {
-  border-color: rgba(99, 102, 241, 0.6);
-  box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.15);
-}
-
-/* Admin select */
-=======
 /* Admin cards — white cards like user cards */
 .admin-card {
   background: #ffffff;
@@ -433,35 +392,17 @@ input[type="date"][class*="input-styled"]::-webkit-calendar-picker-indicator {
 }
 
 /* Admin select — same style as user custom select */
->>>>>>> frontmoneflo
 .admin-select {
   -webkit-appearance: none;
   -moz-appearance: none;
   appearance: none;
-<<<<<<< HEAD
-  background-color: rgba(51, 65, 85, 0.5);
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%2394a3b8' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
-=======
   background-color: #ffffff;
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%23546E7A' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
->>>>>>> frontmoneflo
   background-repeat: no-repeat;
   background-position: right 10px center;
   background-size: 14px 14px;
   padding-right: 30px !important;
   cursor: pointer;
-<<<<<<< HEAD
-  color: #CBD5E1;
-  outline: none;
-}
-.admin-select:focus {
-  border-color: rgba(99, 102, 241, 0.6);
-  box-shadow: 0 0 0 2px rgba(99, 102, 241, 0.2);
-}
-.admin-select option { background: #1E293B; color: #F1F5F9; }
-
-/* Admin sidebar responsive */
-=======
   color: #263238;
   border: 1px solid #B0BEC5;
   border-radius: 0.75rem;
@@ -479,13 +420,10 @@ input[type="date"][class*="input-styled"]::-webkit-calendar-picker-indicator {
 .admin-select option { background: #ffffff; color: #263238; }
 
 /* Admin sidebar layout on mobile — shares same mechanics as user sidebar */
->>>>>>> frontmoneflo
 @media (max-width: 1023px) {
   .admin-main-scroll { margin-left: 0; }
 }
 
-<<<<<<< HEAD
-=======
 /* ── Print Styles (Laporan PDF Export) ────────────────────────────────────── */
 .print-layout { display: none; }
 
@@ -523,4 +461,3 @@ input[type="date"][class*="input-styled"]::-webkit-calendar-picker-indicator {
   .print-no-break  { page-break-inside: avoid; break-inside: avoid; }
   .print-page-break { page-break-before: always; break-before: always; }
 }
->>>>>>> frontmoneflo
