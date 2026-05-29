@@ -350,8 +350,9 @@ export default function LandingPage() {
           </div>
 
           <div className="landing-steps-v2">
-            {/* Connector line antara step */}
-            <div className="landing-steps-v2__line" />
+            {/* Connector lines antara step — dipecah agar tidak memotong circle tengah */}
+            <div className="landing-steps-v2__line landing-steps-v2__line--left" />
+            <div className="landing-steps-v2__line landing-steps-v2__line--right" />
 
             {STEPS.map((s, i) => (
               <div key={i} className="landing-step-v2">
@@ -430,7 +431,7 @@ export default function LandingPage() {
               <span className="landing-footer__logo-text">MoneFlo</span>
             </div>
             <p className="landing-footer__tagline">
-              Platform pengelolaan keuangan organisasi yang modern, aman, dan mudah digunakan.
+              Platform pengelolaan keuangan organisasi yang modern, aman, transparan, efisien, dan mudah digunakan untuk mendukung pengelolaan data serta transaksi keuangan secara lebih terstruktur.
             </p>
           </div>
 
