@@ -5,7 +5,7 @@ import { useAuth } from '../../hooks/useAuth';
 import { useToast } from '../../context/ToastContext';
 import { getInitials } from '../../utils/formatters';
 
-/* ── KOMPONEN UTAMA: Halaman Profil Organisasi (User) ── */
+/* KOMPONEN UTAMA: Halaman Profil Organisasi (User)  */
 /* Tempat pengurus melihat dan mengubah data publik organisasi (nama, jenis, logo, deskripsi) */
 export default function ProfilPage() {
   const navigate = useNavigate();

@@ -1,4 +1,4 @@
-/* ── KOMPONEN MODAL: Mengubah rincian transaksi (User) ── */
+/* KOMPONEN MODAL: Mengubah rincian transaksi (User)  */
 import { useState, useEffect, useRef } from 'react';
 import { useApp } from '../../context/AppContext';
 import { useToast } from '../../context/ToastContext';
@@ -19,14 +19,14 @@ export default function EditTransaksiModal({ isOpen, txnId, onClose }) {
   const showToast = useToast();
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  // ── Format helpers ──
+  // Format helpers 
   const formatDateForDisplay = (dateString) => {
     if (!dateString) return '';
     const [year, month, day] = dateString.split('-');
     return `${day}/${month}/${year}`;
   };
 
-  // ── Form states ──
+  // Form states 
   const [date,        setDate]        = useState('');
   const [displayDate, setDisplayDate] = useState('');
   const [showDatePicker, setShowDatePicker] = useState(false);
@@ -37,7 +37,7 @@ export default function EditTransaksiModal({ isOpen, txnId, onClose }) {
   const [amount, setAmount] = useState('');
   const [note,   setNote]   = useState('');
 
-  // ── Bukti Transaksi states ──
+  // Bukti Transaksi states 
   const [existingDocs, setExistingDocs] = useState([]); // dokumen tersimpan dari transaksi
   const [newFiles,     setNewFiles]     = useState([]); // File baru yang ditambahkan
   const [isDrag,       setIsDrag]       = useState(false);
@@ -46,7 +46,7 @@ export default function EditTransaksiModal({ isOpen, txnId, onClose }) {
   const fileRef       = useRef(null);
   const datePickerRef = useRef(null);
 
-  // ── Populate form saat modal dibuka ──
+  // Populate form saat modal dibuka 
   useEffect(() => {
     if (txnId && isOpen) {
       const t = state.transactions.find((x) => x.id === txnId);
@@ -66,7 +66,7 @@ export default function EditTransaksiModal({ isOpen, txnId, onClose }) {
     if (!isOpen) { setShowDatePicker(false); setViewDoc(null); }
   }, [txnId, isOpen, state.transactions]);
 
-  // ── Tutup date picker saat klik di luar ──
+  // Tutup date picker saat klik di luar 
   useEffect(() => {
     const handler = (e) => {
       if (datePickerRef.current && !datePickerRef.current.contains(e.target)) setShowDatePicker(false);
@@ -75,7 +75,7 @@ export default function EditTransaksiModal({ isOpen, txnId, onClose }) {
     return () => document.removeEventListener('mousedown', handler);
   }, []);
 
-  // ── Calendar helpers ──
+  // Calendar helpers 
   const getTodayDate = () => {
     const d = new Date();
     return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
@@ -153,7 +153,7 @@ export default function EditTransaksiModal({ isOpen, txnId, onClose }) {
     );
   };
 
-  // ── Proses file baru (validasi + baca sebagai dataUrl) ──
+  // Proses file baru (validasi + baca sebagai dataUrl) 
   const processFiles = (incoming) => {
     const maxSz   = 10 * 1024 * 1024;
     const okTypes = ['image/jpeg','image/png','image/jpg','application/pdf','application/msword','application/vnd.openxmlformats-officedocument.wordprocessingml.document'];
@@ -175,7 +175,7 @@ export default function EditTransaksiModal({ isOpen, txnId, onClose }) {
   const removeExistingDoc = (idx) => setExistingDocs((p) => p.filter((_, i) => i !== idx));
   const removeNewFile     = (idx) => setNewFiles((p) => p.filter((_, i) => i !== idx));
 
-  // ── Simpan perubahan via API (async dengan error handling) ──
+  // Simpan perubahan via API (async dengan error handling) 
   const handleSave = async () => {
     if (!date)                          { showToast('Pilih tanggal', 'error');             return; }
     if (!desc.trim())                   { showToast('Isi keterangan', 'error');            return; }
@@ -201,7 +201,7 @@ export default function EditTransaksiModal({ isOpen, txnId, onClose }) {
 
   return (
     <Modal isOpen={isOpen} onClose={onClose} maxWidth="max-w-lg">
-      {/* ── Header ── */}
+      {/* Header  */}
       <div className="flex items-center justify-between p-5 border-b border-neutral-light/50 sticky top-0 bg-white rounded-t-2xl z-10">
         <h3 className="font-semibold text-primary text-lg">Edit Transaksi</h3>
         <button type="button" onClick={onClose} className="w-8 h-8 rounded-lg hover:bg-neutral-50 flex items-center justify-center text-neutral">
@@ -271,7 +271,7 @@ export default function EditTransaksiModal({ isOpen, txnId, onClose }) {
             className="input-styled w-full px-4 py-2.5 border border-neutral-light rounded-xl text-sm outline-none transition-all resize-none" />
         </div>
 
-        {/* ── Bukti Transaksi ── */}
+        {/* Bukti Transaksi  */}
         <div>
           <label className="block text-xs font-semibold text-neutral uppercase tracking-wider mb-1.5">Bukti Transaksi</label>
 
@@ -372,7 +372,7 @@ export default function EditTransaksiModal({ isOpen, txnId, onClose }) {
         </div>
       </div>
 
-      {/* ── Footer Aksi ── */}
+      {/* Footer Aksi  */}
       <div className="flex gap-3 p-5 border-t border-neutral-light/50 sticky bottom-0 bg-white rounded-b-2xl">
         <button type="button" onClick={onClose}
           className="flex-1 py-2.5 border border-neutral-light rounded-xl text-sm font-semibold text-neutral-dark hover:bg-neutral-50 transition-colors">
